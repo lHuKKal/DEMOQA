@@ -1,12 +1,7 @@
 import time
-from faker import Faker
-
-from data.data import Person
 from generator.generator import generated_person
 from locators.elements_page_locators import TextBoxPageLocators
 from pages.base_page import BasePage
-
-fake = Faker("ru_RU")
 
 
 class TextBoxPage(BasePage):
@@ -30,7 +25,8 @@ class TextBoxPage(BasePage):
         return full_name, email, current_address, permanent_address
 
     def check_filled_form(self):
-        """Проверка данных"""
+        """Вытаскиваем данные для дальнейшей проверки"""
+
         full_name = self.element_is_visible(self.locators.CREATED_FULL_NAME).text.split(':')[1]  # вытаскиваем текста из DOM для дальнейшей проверки c помощью text
         email = self.element_is_visible(self.locators.CREATED_EMAIL).text.split(':')[1]  # split разделяем текст и вытаскиваем именно первый индекс для сохранения только введенного текста для дальнейшей проверки
         current_address = self.element_is_visible(self.locators.CREATED_CURRENT_ADDRESS).text.split(':')[1]
