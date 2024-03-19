@@ -1,6 +1,10 @@
+import random
 import time
+
+from selenium.webdriver.common.by import By
+
 from generator.generator import generated_person
-from locators.elements_page_locators import TextBoxPageLocators
+from locators.elements_page_locators import TextBoxPageLocators, CheckBoxPageLocators
 from pages.base_page import BasePage
 
 
@@ -9,7 +13,8 @@ class TextBoxPage(BasePage):
 
     def fill_all_fields(self):
         """Ввод данных"""
-        person_info = next(generated_person())  # Провести только одну итерацию для ввода фейковых данных. Используется функция next
+        person_info = next(
+            generated_person())  # Провести только одну итерацию для ввода фейковых данных. Используется функция next
 
         full_name = person_info.full_name
         email = person_info.email
@@ -27,8 +32,46 @@ class TextBoxPage(BasePage):
     def check_filled_form(self):
         """Вытаскиваем данные для дальнейшей проверки"""
 
-        full_name = self.element_is_visible(self.locators.CREATED_FULL_NAME).text.split(':')[1]  # вытаскиваем текста из DOM для дальнейшей проверки c помощью text
-        email = self.element_is_visible(self.locators.CREATED_EMAIL).text.split(':')[1]  # split разделяем текст и вытаскиваем именно первый индекс для сохранения только введенного текста для дальнейшей проверки
+        full_name = self.element_is_visible(self.locators.CREATED_FULL_NAME).text.split(':')[
+            1]  # вытаскиваем текста из DOM для дальнейшей проверки c помощью text
+        email = self.element_is_visible(self.locators.CREATED_EMAIL).text.split(':')[
+            1]  # split разделяем текст и вытаскиваем именно первый индекс для сохранения только введенного текста для дальнейшей проверки
         current_address = self.element_is_visible(self.locators.CREATED_CURRENT_ADDRESS).text.split(':')[1]
         permanent_address = self.element_is_visible(self.locators.CREATED_PERMANENT_ADDRESS).text.split(':')[1]
         return full_name, email, current_address, permanent_address
+
+
+class CheckBoxPage(BasePage):
+    locators = CheckBoxPageLocators
+
+    def open_full_list_checbox(self):
+        self.element_is_visible(self.locators.EXPAND_ALL_BUTTON).click()
+
+    def click_random_checkbox(self):
+        item_list = self.elements_are_visible(self.locators.ITEM_LIST)
+        count = 21  # общее количество кликов будет = 21
+        while count != 0:  # цикл для случайного клика
+            item = item_list[random.randint(1, 15)]  # рандомные чекбокс от 1 до 16
+            if count > 0:
+                self.scroll_to_element(self.locators.ITEM_LIST)
+                item.click()
+                count -= 1
+
+            else:
+                break
+
+    def get_checked_checkboxes(self):
+        checked_list = self.elements_are_present(self.locators.CHECKED_ITEMS)
+        data = []
+        for box in checked_list:
+            title_item = box.find_element(By.XPATH, self.locators.TITLE_ITEM)
+            data.append(title_item.text)
+        return str(data).replace(' ', '').replace('doc', '').replace('.', '').lower()
+        # делаем замену заголовков, чтобы был корректный assert
+
+    def get_output_result(self):
+        result_list = self.elements_are_present(self.locators.OUTPUT_RESULT)
+        data = []
+        for item in result_list:
+            data.append(item.text)
+        return str(data).replace(' ', '').lower()
