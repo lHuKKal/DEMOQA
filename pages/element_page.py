@@ -4,17 +4,19 @@ import time
 from selenium.webdriver.common.by import By
 
 from generator.generator import generated_person
-from locators.elements_page_locators import TextBoxPageLocators, CheckBoxPageLocators
+from locators.elements_page_locators import TextBoxPageLocators, CheckBoxPageLocators, RadioButtonsLocators
 from pages.base_page import BasePage
 
 
 class TextBoxPage(BasePage):
     locators = TextBoxPageLocators()
 
+    """Логика тестов для страницы https://demoqa.com/text-box"""
+
     def fill_all_fields(self):
         """Ввод данных"""
-        person_info = next(
-            generated_person())  # Провести только одну итерацию для ввода фейковых данных. Используется функция next
+        person_info = next(generated_person())
+        # Провести только одну итерацию для ввода фейковых данных. Используется функция next
 
         full_name = person_info.full_name
         email = person_info.email
@@ -44,10 +46,14 @@ class TextBoxPage(BasePage):
 class CheckBoxPage(BasePage):
     locators = CheckBoxPageLocators
 
-    def open_full_list_checbox(self):
+    """Логика тестов для страницы https://demoqa.com/checkbox"""
+
+    def open_full_list_checkbox(self):
+        """Просто открытие всего списка папок для выбора с помощью чек боксов"""
         self.element_is_visible(self.locators.EXPAND_ALL_BUTTON).click()
 
     def click_random_checkbox(self):
+        """Логика работы для выбора случайного чек бокса"""
         item_list = self.elements_are_visible(self.locators.ITEM_LIST)
         count = 21  # общее количество кликов будет = 21
         while count != 0:  # цикл для случайного клика
@@ -74,4 +80,21 @@ class CheckBoxPage(BasePage):
         data = []
         for item in result_list:
             data.append(item.text)
-        return str(data).replace(' ', '').lower()
+        return str(data).replace(' ', '').lower()  # делаем замену заголовков, чтобы был корректный assert
+
+
+class RadioButtonPage(BasePage):
+    locators = RadioButtonsLocators
+
+    """Логика тестов радио кнопок"""
+
+    def click_radio_button(self, choice):  # добавляем переменную choice для дальнейшего выбора из словаря
+        choices = {  # Создаем словарь с путями для всех радио кнопок
+            'yes': self.locators.YES_RADIO_BUTTON,
+            'impressive': self.locators.IMPRESSIVE_RADIO_BUTTON,
+            'no': self.locators.NO_RADIO_BUTTON
+        }
+        self.element_is_visible(choices[choice]).click()  #
+
+    def get_result_radio_button(self):
+        return self.element_is_present(self.locators.OUTPUT_RESULT_RADIO_BUTTON).text
