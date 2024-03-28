@@ -32,9 +32,48 @@ class CheckBoxPageLocators:
 class RadioButtonsLocators:
     """Локаторы со страницы https://demoqa.com/radio-button"""
 
-    # Radio buttons locator
+    # Radio buttons locators
     YES_RADIO_BUTTON = (By.CSS_SELECTOR, "label[class='custom-control-label'][for='yesRadio']")
     IMPRESSIVE_RADIO_BUTTON = (By.CSS_SELECTOR, "label[class='custom-control-label'][for='impressiveRadio']")
     NO_RADIO_BUTTON = (By.CSS_SELECTOR, "label[class='custom-control-label disabled'][for='noRadio']")
     OUTPUT_RESULT_RADIO_BUTTON = (By.CSS_SELECTOR, "span[class='text-success']")
+
+
+class WebTablesLocators:
+    """Локаторы со страницы https://demoqa.com/webtables"""
+
+    # "Add" button for opens data form
+    ADD_BUTTON = (By.CSS_SELECTOR, "button[id='addNewRecordButton']")
+
+    # "Registration Form" data form locators
+    FIRST_NAME = (By.CSS_SELECTOR, "input[id='firstName']")
+    LAST_NAME = (By.CSS_SELECTOR, "input[id='lastName']")
+    EMAIL = (By.CSS_SELECTOR, "input[id='userEmail']")
+    AGE = (By.CSS_SELECTOR, "input[id='age']")
+    SALARY = (By.CSS_SELECTOR, "input[id='salary']")
+    DEPARTAMENT = (By.CSS_SELECTOR, "input[id='department']")
+    SUBMIT_BUTTON = (By.CSS_SELECTOR, "button[id='submit']")
+
+    # "Edit Form" data form locators
+    FIRST_NAME_EDIT = (By.CSS_SELECTOR, "input[id='firstName']")
+    LAST_NAME_EDIT = (By.CSS_SELECTOR, "input[id='lastName']")
+    EMAIL_EDIT = (By.CSS_SELECTOR, "input[id='userEmail']")
+    AGE_EDIT = (By.CSS_SELECTOR, "input[id='age']")
+    SALARY_EDIT = (By.CSS_SELECTOR, "input[id='salary']")
+    DEPARTAMENT_EDIT = (By.CSS_SELECTOR, "input[id='department']")
+
+    # table list
+    FULL_RECORD_LIST = (By.CSS_SELECTOR, "div[class='rt-tr-group']")
+    EDIT_BUTTON = (By.CSS_SELECTOR, "span[title='Edit']")
+    DELETE_BUTTON = (By.CSS_SELECTOR, "span[title='Delete']")
+
+    # Search field
+    SEARCH_INPUT = (By.CSS_SELECTOR, "input[id='searchBox']")
+    # ROW_PARENT = ".//ancestor::div[contains(@class, 'rt-tr-group')]"
+
+
+
+
+
+
 

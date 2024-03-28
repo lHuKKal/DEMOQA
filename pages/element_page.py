@@ -1,12 +1,16 @@
 import random
 import time
 
+from faker import Faker
 from selenium.webdriver.common.by import By
+from selenium.webdriver import ActionChains as action, Keys
 
-from generator.generator import generated_person
-from locators.elements_page_locators import TextBoxPageLocators, CheckBoxPageLocators, RadioButtonsLocators
+from generator.generator import generate_person
+from locators.elements_page_locators import TextBoxPageLocators, CheckBoxPageLocators, RadioButtonsLocators, \
+    WebTablesLocators
 from pages.base_page import BasePage
 
+faker_ru = Faker("ru_RU")
 
 class TextBoxPage(BasePage):
     locators = TextBoxPageLocators()
@@ -15,8 +19,8 @@ class TextBoxPage(BasePage):
 
     def fill_all_fields(self):
         """Ввод данных"""
-        person_info = next(generated_person())
         # Провести только одну итерацию для ввода фейковых данных. Используется функция next
+        person_info = next(generate_person())
 
         full_name = person_info.full_name
         email = person_info.email
@@ -94,7 +98,101 @@ class RadioButtonPage(BasePage):
             'impressive': self.locators.IMPRESSIVE_RADIO_BUTTON,
             'no': self.locators.NO_RADIO_BUTTON
         }
-        self.element_is_visible(choices[choice]).click()  #
+        self.element_is_visible(choices[choice]).click()
 
     def get_result_radio_button(self):
-        return self.element_is_present(self.locators.OUTPUT_RESULT_RADIO_BUTTON).text
+        return self.element_is_visible(self.locators.OUTPUT_RESULT_RADIO_BUTTON).text
+
+
+class WebTablesPage(BasePage):
+    """Тест CRUD интерфейса Web Tables"""
+    locators = WebTablesLocators
+
+    def create_new_record_web_table(self, count=1):
+        """Создание новой записи"""
+
+        results = []
+
+        # цикл создания несколько записей от пестицида
+        while count != 0:
+            # Провести только одну итерацию для ввода фейковых данных. Используется функция next
+            generation_data = next(generate_person())
+
+            first_name = generation_data.first_name
+            last_name = generation_data.last_name
+            email = generation_data.email
+            age = generation_data.age
+            salary = generation_data.salary
+            departament = generation_data.departament
+
+            """Создание новой записи в интерфейсе Web Tables"""
+
+            self.element_is_visible(self.locators.ADD_BUTTON).click()
+            self.element_is_visible(self.locators.FIRST_NAME).send_keys(first_name)
+            self.element_is_visible(self.locators.LAST_NAME).send_keys(last_name)
+            self.element_is_visible(self.locators.EMAIL).send_keys(email)
+            self.element_is_visible(self.locators.AGE).send_keys(age)
+            self.element_is_visible(self.locators.SALARY).send_keys(salary)
+            self.element_is_visible(self.locators.DEPARTAMENT).send_keys(departament)
+            self.element_is_visible(self.locators.SUBMIT_BUTTON).click()
+
+            results.append([first_name, last_name, str(age), email, str(salary), departament])
+            count -= 1
+        return results
+
+    def check_created_record_in_the_web_tables(self):
+        """Берем данные из таблицы для дальнейшей проверки, что запись была создана"""
+
+        created_record_list = self.elements_are_present(self.locators.FULL_RECORD_LIST)
+
+        # Берем все записи из таблицы из интерфейса Web Tables для дальнейшего сравнения с созданной записью
+        data = []
+        for item in created_record_list:
+            data.append(item.text.splitlines())
+        return data
+
+    def search_record_in_web_table(self, key_word):
+
+        self.element_is_visible(self.locators.SEARCH_INPUT).send_keys(key_word)
+
+    def check_searched_record(self):
+        """Забираем данные из таблицы для дальнейшей проверке"""
+
+        # Берем все данные родительской ветки от кнопки Delete в переменной row
+        delete_button = self.element_is_present(self.locators.DELETE_BUTTON)
+        row = delete_button.find_element(By.XPATH, ".//ancestor::div[contains(@class, 'rt-tr-group')]")
+
+        return row.text.splitlines()
+
+    def edit_created_record(self):
+        """Логика редактирование записи"""
+
+        self.element_is_present(self.locators.EDIT_BUTTON).click()
+        # Пришлось очистить поле именно таким образом, иначе с помощью функции clear, поле не "очищалось"
+        # И при вводе очищенное значение отображалось вновь при вводе любого значение
+        self.element_is_visible(self.locators.FIRST_NAME_EDIT).send_keys(Keys.CONTROL + "a")  # Выделение всего текста
+        self.element_is_visible(self.locators.FIRST_NAME_EDIT).send_keys(Keys.DELETE)  # Удаление выделенного текста
+        self.element_is_visible(self.locators.LAST_NAME_EDIT).send_keys(Keys.CONTROL + "a")  # Выделение всего текста
+        self.element_is_visible(self.locators.LAST_NAME).send_keys(Keys.DELETE)  # Удаление выделенного текста()
+        self.element_is_visible(self.locators.EMAIL_EDIT).send_keys(Keys.CONTROL + "a")  # Выделение всего текста
+        self.element_is_visible(self.locators.EMAIL_EDIT).send_keys(Keys.DELETE)  # Удаление выделенного текста
+        self.element_is_visible(self.locators.AGE_EDIT).send_keys(Keys.CONTROL + "a")  # Выделение всего текста
+        self.element_is_visible(self.locators.AGE_EDIT).send_keys(Keys.DELETE)  # Удаление выделенного текста
+        self.element_is_visible(self.locators.SALARY_EDIT).send_keys(Keys.CONTROL + "a")  # Выделение всего текста
+        self.element_is_visible(self.locators.SALARY_EDIT).send_keys(Keys.DELETE)  # Удаление выделенного текста
+        self.element_is_visible(self.locators.DEPARTAMENT_EDIT).send_keys(Keys.CONTROL + "a")  # Выделение всего текста
+        self.element_is_visible(self.locators.DEPARTAMENT_EDIT).send_keys(Keys.DELETE)  # Удаление выделенного текста
+
+        time.sleep(5)
+
+        self.element_is_visible(self.locators.FIRST_NAME_EDIT).send_keys(faker_ru.first_name())
+        self.element_is_visible(self.locators.LAST_NAME_EDIT).send_keys(faker_ru.last_name())
+        self.element_is_visible(self.locators.EMAIL_EDIT).send_keys(faker_ru.email())
+        self.element_is_visible(self.locators.AGE_EDIT).send_keys(random.randint(1, 99))
+        self.element_is_visible(self.locators.SALARY_EDIT).send_keys(random.randint(10000, 99999))
+        self.element_is_visible(self.locators.DEPARTAMENT_EDIT).send_keys(faker_ru.job())
+
+
+
+
+
