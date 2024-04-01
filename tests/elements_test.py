@@ -2,7 +2,7 @@ import random
 import time
 import pytest
 from pages.base_page import BasePage
-from pages.element_page import TextBoxPage, CheckBoxPage, RadioButtonPage, WebTablesPage
+from pages.element_page import TextBoxPage, CheckBoxPage, RadioButtonPage, WebTablesPage, ButtonsPage
 
 
 class TestElements:
@@ -53,7 +53,6 @@ class TestElements:
             assert "No" != output_radio_button_no, "There is bug"
 
     class TestWebTable:
-
         """Тестирование интерфейса Web Tables (https://demoqa.com/webtables) """
 
         def test_add_new_record_web_table(self, driver):
@@ -108,6 +107,8 @@ class TestElements:
             # assert any(edit_data in item for item in table_result), f"Проверка не пройдена {edit_data} не найдено"
 
         def test_delete_record(self, driver):
+            """Тестирование удаление созданной записи в интерфейсе Web Tables"""
+
             web_tables = WebTablesPage(driver, "https://demoqa.com/webtables")
             web_tables.open()
             new_record = web_tables.create_new_record_web_table()[0][random.randint(0, 5)]
@@ -123,13 +124,26 @@ class TestElements:
             # assert all(new_record not in item for item in table_result), f"Record with '{new_record}' value is still present"
 
         def test_web_table_change_count_rows(self, driver):
+            """Тестирование смену строк в интерфейсе Web Tables"""
+
             web_tables = WebTablesPage(driver, "https://demoqa.com/webtables")
             web_tables.open()
-            five_count = web_tables.five_change_rows()
-            assert 5 == five_count, "error"
+            count = web_tables.own_change_count_some_rows()
+            assert count == [5, 10, 20, 25, 50, 100], "The number of rows has not been changed or changed incorrectly"
+
+    class TestButtonInterface:
+
+        def test_double_click(self, driver):
+            button_interface = ButtonsPage(driver, "https://demoqa.com/buttons")
+            button_interface.open()
+            button_interface.double_click_button()
+            button_interface.right_click_button()
+            button_interface.left_click_button()
+            double_click, right_click, dynamic_click = button_interface.check_clicks_button()
+            assert "You have done a double click" == double_click, "Double click is not performed"
+            assert "You have done a right click" == right_click, "Right click is not performed"
+            assert "You have done a dynamic click" == dynamic_click, "Dynamic click is not performed"
+
+            time.sleep(2)
 
 
-
-            # count = web_tables.change_count_some_rows()
-            # print(count)
-            # assert count == [5, 10, 25, 50, 100], "The number of rows has not been changed or changed incorrectly"

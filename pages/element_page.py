@@ -4,14 +4,15 @@ import time
 from faker import Faker
 from selenium.webdriver.common.by import By
 from selenium.webdriver import ActionChains as action, Keys
+from selenium.webdriver.common.action_chains import ActionChains
 
 from generator.generator import generate_person
 from locators.elements_page_locators import TextBoxPageLocators, CheckBoxPageLocators, RadioButtonsLocators, \
-    WebTablesLocators
+    WebTablesLocators, ButtonsLocators
 from pages.base_page import BasePage
 
 faker_ru = Faker("ru_RU")
-
+actions = ActionChains
 
 class TextBoxPage(BasePage):
     locators = TextBoxPageLocators()
@@ -257,6 +258,44 @@ class WebTablesPage(BasePage):
         five_row = self.elements_are_present(self.locators.FULL_RECORD_LIST)
         return len(five_row)
 
+    def own_change_count_some_rows(self):
+        """Смена количество строк в таблице"""
+
+        count_row = [5, 10, 20, 25, 50, 100]
+        data = []
+        count_row_button = self.element_is_visible(self.locators.COUNT_ROW_LIST_BUTTON)
+
+        for count in count_row:
+            self.scroll_to_element((By.CSS_SELECTOR, "select[aria-label='rows per page']"))
+            count_row_button.click()
+            self.element_is_visible((By.CSS_SELECTOR, f"option[value='{count}']")).click()
+            list_rows = self.elements_are_present(self.locators.FULL_RECORD_LIST)
+            data.append(len(list_rows))
+        return data
 
 
+class ButtonsPage(BasePage):
+    locators = ButtonsLocators
+
+    def double_click_button(self):
+
+        double_button_locator = self.element_is_visible(self.locators.DOUBLE_CLICK_BUTTON)
+        actions(self.driver).double_click(double_button_locator).perform()
+
+    def right_click_button(self):
+
+        right_click_locator = self.element_is_visible(self.locators.RIGHT_CLICK_BUTTON)
+        actions(self.driver).context_click(right_click_locator).perform()
+
+    def left_click_button(self):
+
+        self.element_is_visible(self.locators.DYNAMIC_CLICK_BUTTON).click()
+
+    def check_clicks_button(self):
+
+        double_click = self.element_is_visible(self.locators.DOUBLE_CLICK_OUTPUT).text
+        right_click = self.element_is_visible(self.locators.RIGHT_CLICK_OUTPUT).text
+        dynamic_click = self.element_is_visible(self.locators.DYNAMIC_CLICK_OUTPUT).text
+
+        return double_click, right_click, dynamic_click
 

@@ -78,3 +78,16 @@ class WebTablesLocators:
     # Search field
     SEARCH_INPUT = (By.CSS_SELECTOR, "input[id='searchBox']")
     # ROW_PARENT = ".//ancestor::div[contains(@class, 'rt-tr-group')]"
+
+
+class ButtonsLocators:
+    """Локаторы со страницы https://demoqa.com/buttons"""
+
+    # Buttons
+    DOUBLE_CLICK_BUTTON = (By.CSS_SELECTOR, "button[id='doubleClickBtn']")
+    RIGHT_CLICK_BUTTON = (By.CSS_SELECTOR, "button[id='rightClickBtn']")
+    DYNAMIC_CLICK_BUTTON = (By.XPATH, "//button[text()='Click Me']")
+
+    DOUBLE_CLICK_OUTPUT = (By.CSS_SELECTOR, "p[id='doubleClickMessage']")
+    RIGHT_CLICK_OUTPUT = (By.CSS_SELECTOR, "p[id='rightClickMessage']")
+    DYNAMIC_CLICK_OUTPUT = (By.CSS_SELECTOR, "p[id='dynamicClickMessage']")
