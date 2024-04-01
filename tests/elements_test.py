@@ -20,6 +20,7 @@ class TestElements:
             assert permanent_address == output_per_adr, "the permanent address don't match"
 
     class TestCheckBox:
+        """Тестирование чек боксов в интерфейсе "Checkbox" (https://demoqa.com/checkbox)"""
 
         def test_check_box(self, driver):
             check_box_page = CheckBoxPage(driver, 'https://demoqa.com/checkbox')
@@ -53,6 +54,8 @@ class TestElements:
 
     class TestWebTable:
 
+        """Тестирование интерфейса Web Tables (https://demoqa.com/webtables) """
+
         def test_add_new_record_web_table(self, driver):
             """Создание новой записи в интерфейсе Web Tables"""
 
@@ -61,8 +64,10 @@ class TestElements:
             new_record = web_tables.create_new_record_web_table()
             table_result = web_tables.check_created_record_in_the_web_tables()
 
-            # Для корректной проверки необходимо создать цикл (ТОЛЬКО для списков).
-            # В данном примере new_record имеет список и будет проверяться список
+            # Так как, в функции создание create_new_record имеется цикл создание несколько записей и созданные
+            # записи добавляются в список (запись в списке - []), и в переменной table_result содержится тоже список,
+            # то для корректной сверки, необходимо создать цикл for, где каждая созданная запись (new_record) будет
+            # проверяться на точные совпадение значений с table_result
             for record in new_record:
                 assert record in table_result, f"Созданная запись {record} не найдена в таблице"
 
@@ -71,7 +76,7 @@ class TestElements:
 
             web_tables = WebTablesPage(driver, "https://demoqa.com/webtables")
             web_tables.open()
-            #  Берем случайное значение переменной для поиска (является второй индекс) для key_word
+            #  Берем случайное значение переменной для поиска (является второй индекс, т.к. это список списков) для key_word
             key_word = web_tables.create_new_record_web_table()[0][random.randint(0, 5)]
             web_tables.search_record_in_web_table(key_word)
             table_result = web_tables.check_searched_record()
@@ -80,12 +85,51 @@ class TestElements:
 
         def test_edit_record(self, driver):
             """Тестирование редактирование записи"""
+
             web_tables = WebTablesPage(driver, "https://demoqa.com/webtables")
             web_tables.open()
-            key_word = web_tables.create_new_record_web_table()[0][random.randint(0, 5)]
-            web_tables.search_record_in_web_table(key_word)
-            web_tables.edit_created_record()
+            # Создаем нового пользователя для теста и ищем его
+            random_data_from_record = web_tables.create_new_record_web_table()[0][random.randint(0, 5)]
+            web_tables.search_record_in_web_table(random_data_from_record)
+            # Редактируем созданного пользователя, но берем случайную данную из созданного пользователя и
+            # сохраняем его в переменную edit_data
+            edit_data = web_tables.edit_created_record()[random.randint(0, 5)]
+            edit_word = edit_data
+            # Вновь ищем отредактированного пользователя для проверки assert
+            web_tables.search_record_in_web_table(edit_word)
             table_result = web_tables.check_searched_record()
 
-            assert key_word in table_result, f"Edited record with '{key_word}' word was not found"
+            assert edit_data in table_result, f"Edited record has been not updated with word '{edit_word}'"
 
+            # Данный assert можно применить, если мы сравниваем одно значение со СПИСКОМ
+            # В данном примере assert, в переменной edit_data хранится одно значение, а в table_result
+            # хранится список. Тогда данный assert будет сравнить каждый раз edit_data, со списком table_result
+            # с помощью цикла for. Если значение будет хотя бы в одном элементе, assert пройдет без ошибок
+            # assert any(edit_data in item for item in table_result), f"Проверка не пройдена {edit_data} не найдено"
+
+        def test_delete_record(self, driver):
+            web_tables = WebTablesPage(driver, "https://demoqa.com/webtables")
+            web_tables.open()
+            new_record = web_tables.create_new_record_web_table()[0][random.randint(0, 5)]
+            web_tables.search_record_in_web_table(new_record)
+            web_tables.delete_record_new_table()
+            text = web_tables.check_delete_record()
+
+            assert text == "No rows found", "Record is not deleted"
+
+            # Данный assert можно применить, если сравнить, что после удаление созданная запись не отображается в списке
+            # с помощью функции all
+            # table_result = web_tables.check_created_record_in_the_web_tables()
+            # assert all(new_record not in item for item in table_result), f"Record with '{new_record}' value is still present"
+
+        def test_web_table_change_count_rows(self, driver):
+            web_tables = WebTablesPage(driver, "https://demoqa.com/webtables")
+            web_tables.open()
+            five_count = web_tables.five_change_rows()
+            assert 5 == five_count, "error"
+
+
+
+            # count = web_tables.change_count_some_rows()
+            # print(count)
+            # assert count == [5, 10, 25, 50, 100], "The number of rows has not been changed or changed incorrectly"

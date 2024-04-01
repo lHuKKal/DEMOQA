@@ -12,6 +12,7 @@ from pages.base_page import BasePage
 
 faker_ru = Faker("ru_RU")
 
+
 class TextBoxPage(BasePage):
     locators = TextBoxPageLocators()
 
@@ -141,18 +142,21 @@ class WebTablesPage(BasePage):
         return results
 
     def check_created_record_in_the_web_tables(self):
-        """Берем данные из таблицы для дальнейшей проверки, что запись была создана"""
+        """Берем ВСЕ данные из таблицы для дальнейшей проверки"""
 
         created_record_list = self.elements_are_present(self.locators.FULL_RECORD_LIST)
 
         # Берем все записи из таблицы из интерфейса Web Tables для дальнейшего сравнения с созданной записью
+        # ОБЯЗАТЕЛЬНО создать такой цикл, чтобы из web element вытащить текста из списков
         data = []
         for item in created_record_list:
             data.append(item.text.splitlines())
         return data
 
     def search_record_in_web_table(self, key_word):
+        """Поиск созданной записи с помощью поля поиска"""
 
+        # Поиск осуществляется с помощью передачи слова в переменную key_word
         self.element_is_visible(self.locators.SEARCH_INPUT).send_keys(key_word)
 
     def check_searched_record(self):
@@ -172,26 +176,86 @@ class WebTablesPage(BasePage):
         # И при вводе очищенное значение отображалось вновь при вводе любого значение
         self.element_is_visible(self.locators.FIRST_NAME_EDIT).send_keys(Keys.CONTROL + "a")  # Выделение всего текста
         self.element_is_visible(self.locators.FIRST_NAME_EDIT).send_keys(Keys.DELETE)  # Удаление выделенного текста
-        self.element_is_visible(self.locators.LAST_NAME_EDIT).send_keys(Keys.CONTROL + "a")  # Выделение всего текста
-        self.element_is_visible(self.locators.LAST_NAME).send_keys(Keys.DELETE)  # Удаление выделенного текста()
-        self.element_is_visible(self.locators.EMAIL_EDIT).send_keys(Keys.CONTROL + "a")  # Выделение всего текста
-        self.element_is_visible(self.locators.EMAIL_EDIT).send_keys(Keys.DELETE)  # Удаление выделенного текста
-        self.element_is_visible(self.locators.AGE_EDIT).send_keys(Keys.CONTROL + "a")  # Выделение всего текста
-        self.element_is_visible(self.locators.AGE_EDIT).send_keys(Keys.DELETE)  # Удаление выделенного текста
-        self.element_is_visible(self.locators.SALARY_EDIT).send_keys(Keys.CONTROL + "a")  # Выделение всего текста
-        self.element_is_visible(self.locators.SALARY_EDIT).send_keys(Keys.DELETE)  # Удаление выделенного текста
-        self.element_is_visible(self.locators.DEPARTAMENT_EDIT).send_keys(Keys.CONTROL + "a")  # Выделение всего текста
-        self.element_is_visible(self.locators.DEPARTAMENT_EDIT).send_keys(Keys.DELETE)  # Удаление выделенного текста
+        self.element_is_visible(self.locators.LAST_NAME_EDIT).send_keys(Keys.CONTROL + "a")
+        self.element_is_visible(self.locators.LAST_NAME).send_keys(Keys.DELETE)
+        self.element_is_visible(self.locators.EMAIL_EDIT).send_keys(Keys.CONTROL + "a")
+        self.element_is_visible(self.locators.EMAIL_EDIT).send_keys(Keys.DELETE)
+        self.element_is_visible(self.locators.AGE_EDIT).send_keys(Keys.CONTROL + "a")
+        self.element_is_visible(self.locators.AGE_EDIT).send_keys(Keys.DELETE)
+        self.element_is_visible(self.locators.SALARY_EDIT).send_keys(Keys.CONTROL + "a")
+        self.element_is_visible(self.locators.SALARY_EDIT).send_keys(Keys.DELETE)
+        self.element_is_visible(self.locators.DEPARTAMENT_EDIT).send_keys(Keys.CONTROL + "a")
+        self.element_is_visible(self.locators.DEPARTAMENT_EDIT).send_keys(Keys.DELETE)
 
-        time.sleep(5)
+        generation_data = next(generate_person())
 
-        self.element_is_visible(self.locators.FIRST_NAME_EDIT).send_keys(faker_ru.first_name())
-        self.element_is_visible(self.locators.LAST_NAME_EDIT).send_keys(faker_ru.last_name())
-        self.element_is_visible(self.locators.EMAIL_EDIT).send_keys(faker_ru.email())
-        self.element_is_visible(self.locators.AGE_EDIT).send_keys(random.randint(1, 99))
-        self.element_is_visible(self.locators.SALARY_EDIT).send_keys(random.randint(10000, 99999))
-        self.element_is_visible(self.locators.DEPARTAMENT_EDIT).send_keys(faker_ru.job())
+        first_name = generation_data.first_name
+        last_name = generation_data.last_name
+        email = generation_data.email
+        age = generation_data.age
+        salary = generation_data.salary
+        departament = generation_data.departament
 
+        """Создание новой записи в интерфейсе Web Tables"""
+
+        self.element_is_visible(self.locators.FIRST_NAME).send_keys(first_name)
+        self.element_is_visible(self.locators.LAST_NAME).send_keys(last_name)
+        self.element_is_visible(self.locators.EMAIL).send_keys(email)
+        self.element_is_visible(self.locators.AGE).send_keys(age)
+        self.element_is_visible(self.locators.SALARY).send_keys(salary)
+        self.element_is_visible(self.locators.DEPARTAMENT).send_keys(departament)
+        self.element_is_visible(self.locators.SUBMIT_BUTTON).click()
+        self.element_is_visible(self.locators.SEARCH_INPUT).send_keys(Keys.CONTROL + "a")
+        self.element_is_visible(self.locators.SEARCH_INPUT).send_keys(Keys.DELETE)
+
+        return first_name, last_name, str(age), email, str(salary), departament
+
+    def delete_record_new_table(self):
+        """Клик на кнопку удалить"""
+
+        self.element_is_visible(self.locators.DELETE_BUTTON).click()
+
+    def check_delete_record(self):
+        """Вытаскиваем текст "No rows found", когда запись удалена для дальнейшей проверки"""
+
+        # Текст "No rows found" отображается когда данные не найдены, либо найденная запись была удалена
+        # возвращаем данный текст в функцию для дальнейшей проверки для теста удаления
+        return self.element_is_present(self.locators.NO_ROWS).text
+
+    def clear_search_field_web_table(self):
+        """Очистка поля поиска"""
+
+        # Используется данный методы из-за того, что после функции clear и ввода любого символа, ранее введенные данные
+        # вновь отображаются в поле, хотя поле до этого было очищено
+        self.element_is_visible(self.locators.SEARCH_INPUT).send_keys(Keys.CONTROL + "a")
+        self.element_is_visible(self.locators.SEARCH_INPUT).send_keys(Keys.DELETE)
+
+    def change_count_some_rows(self):
+        """Смена количество строк в таблице"""
+
+        count_row = [5, 10, 25, 50, 100]
+        data = []
+        count_row_button = self.element_is_visible(self.locators.COUNT_ROW_LIST_BUTTON)
+
+        for count in count_row:
+            self.scroll_to_element((By.CSS_SELECTOR, "select[aria-label='rows per page']"))
+            count_row_button.click()
+            self.element_is_visible((By.CSS_SELECTOR, f"option[value='{count}']")).click()
+            data.append(self.check_count_rows())
+        return data
+
+    def check_count_rows(self):
+
+        list_rows = self.elements_are_present(self.locators.FULL_RECORD_LIST)
+        return len(list_rows)
+
+    def five_change_rows(self):
+
+        self.scroll_to_element(self.locators.COUNT_ROW_LIST_BUTTON)
+        self.element_is_visible(self.locators.COUNT_ROW_LIST_BUTTON).click()
+        self.element_is_visible(self.locators.FIVE_COUNT_ROW).click()
+        five_row = self.elements_are_present(self.locators.FULL_RECORD_LIST)
+        return len(five_row)
 
 
 

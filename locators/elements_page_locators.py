@@ -45,7 +45,7 @@ class WebTablesLocators:
     # "Add" button for opens data form
     ADD_BUTTON = (By.CSS_SELECTOR, "button[id='addNewRecordButton']")
 
-    # "Registration Form" data form locators
+    # "Registration Form" data form
     FIRST_NAME = (By.CSS_SELECTOR, "input[id='firstName']")
     LAST_NAME = (By.CSS_SELECTOR, "input[id='lastName']")
     EMAIL = (By.CSS_SELECTOR, "input[id='userEmail']")
@@ -64,16 +64,17 @@ class WebTablesLocators:
 
     # table list
     FULL_RECORD_LIST = (By.CSS_SELECTOR, "div[class='rt-tr-group']")
-    EDIT_BUTTON = (By.CSS_SELECTOR, "span[title='Edit']")
     DELETE_BUTTON = (By.CSS_SELECTOR, "span[title='Delete']")
+    EDIT_BUTTON = (By.CSS_SELECTOR, "span[title='Edit']")
+    NO_ROWS = (By.CSS_SELECTOR, "div[class='rt-noData']")
+    COUNT_ROW_LIST_BUTTON = (By.CSS_SELECTOR, "select[aria-label='rows per page']")
+    FIVE_COUNT_ROW = (By.CSS_SELECTOR, f"option[value='5']")
+    TEN_COUNT_ROW = (By.CSS_SELECTOR, f"option[value='10']")
+    TWENTY_COUNT_ROW = (By.CSS_SELECTOR, f"option[value='20']")
+    TWENTY_FIVE_COUNT_ROW = (By.CSS_SELECTOR, f"option[value='25']")
+    FIFTY_COUNT_ROW = (By.CSS_SELECTOR, f"option[value='50']")
+    ONE_HUNDRED_COUNT_ROW = (By.CSS_SELECTOR, f"option[value='100']")
 
     # Search field
     SEARCH_INPUT = (By.CSS_SELECTOR, "input[id='searchBox']")
     # ROW_PARENT = ".//ancestor::div[contains(@class, 'rt-tr-group')]"
-
-
-
-
-
-
-
