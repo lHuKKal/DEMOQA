@@ -1,18 +1,22 @@
+import base64
+import os
 import random
 import time
 
+import requests
 from faker import Faker
 from selenium.webdriver.common.by import By
-from selenium.webdriver import ActionChains as action, Keys
+from selenium.webdriver import Keys
 from selenium.webdriver.common.action_chains import ActionChains
 
-from generator.generator import generate_person
+from generator.generator import generate_person, generate_file, generate_jpeg
 from locators.elements_page_locators import TextBoxPageLocators, CheckBoxPageLocators, RadioButtonsLocators, \
-    WebTablesLocators, ButtonsLocators
+    WebTablesLocators, ButtonsPageLocators, LinksPageLocators, ImageLocators, UploadDownloadPageLocators
 from pages.base_page import BasePage
 
 faker_ru = Faker("ru_RU")
 actions = ActionChains
+
 
 class TextBoxPage(BasePage):
     locators = TextBoxPageLocators()
@@ -271,31 +275,101 @@ class WebTablesPage(BasePage):
             self.element_is_visible((By.CSS_SELECTOR, f"option[value='{count}']")).click()
             list_rows = self.elements_are_present(self.locators.FULL_RECORD_LIST)
             data.append(len(list_rows))
+            time.sleep(0.3)
         return data
 
 
 class ButtonsPage(BasePage):
-    locators = ButtonsLocators
+    """Тестирование кликов в интерфейсе Buttons (https://demoqa.com/buttons)"""
+    locators = ButtonsPageLocators
 
     def double_click_button(self):
+        """Тест двойного клика"""
 
-        double_button_locator = self.element_is_visible(self.locators.DOUBLE_CLICK_BUTTON)
-        actions(self.driver).double_click(double_button_locator).perform()
+        self.action_double_click(self.element_is_visible(self.locators.DOUBLE_CLICK_BUTTON))
 
     def right_click_button(self):
+        """Тест клика провой кнопки мыши"""
 
-        right_click_locator = self.element_is_visible(self.locators.RIGHT_CLICK_BUTTON)
-        actions(self.driver).context_click(right_click_locator).perform()
+        self.action_right_click(self.element_is_visible(self.locators.RIGHT_CLICK_BUTTON))
 
     def left_click_button(self):
+        """Тест клика у динамической кнопки"""
 
         self.element_is_visible(self.locators.DYNAMIC_CLICK_BUTTON).click()
 
     def check_clicks_button(self):
+        """Оутпуты, что кнопки были кликнуты для проверки"""
 
-        double_click = self.element_is_visible(self.locators.DOUBLE_CLICK_OUTPUT).text
-        right_click = self.element_is_visible(self.locators.RIGHT_CLICK_OUTPUT).text
-        dynamic_click = self.element_is_visible(self.locators.DYNAMIC_CLICK_OUTPUT).text
+        double_click = self.element_is_present(self.locators.DOUBLE_CLICK_OUTPUT).text
+        right_click = self.element_is_present(self.locators.RIGHT_CLICK_OUTPUT).text
+        dynamic_click = self.element_is_present(self.locators.DYNAMIC_CLICK_OUTPUT).text
 
         return double_click, right_click, dynamic_click
+
+
+class LinksPage(BasePage):
+    locators = LinksPageLocators
+
+    def check_new_tab_simple_link(self):
+
+        simple_link = self.element_is_visible(self.locators.SAMPLE_LINK)
+        link_href = simple_link.get_attribute('href')
+        request = requests.get(link_href)
+
+        if request.status_code == 200:
+            simple_link.click()
+            self.driver.switch_to.window(self.driver.window_handles[1])
+            url = self.driver.current_url
+            return link_href, url
+        else:
+            return link_href, request.status_code
+
+    def check_broken_link(self, url):
+
+        request = requests.get(url)
+
+        if request.status_code == 200:
+            self.element_is_present(self.locators.BAD_REQUEST).click()
+        else:
+            return request.status_code
+
+
+class BrokenPage(BasePage):
+    """Тестирование картинок в интерфейсе Images (https://demoqa.com/broken)"""
+    locators = ImageLocators
+
+    def valid_image(self):
+        """Тестирование валидной картинки"""
+        width, height = self.image_get_width_and_height(self.locators.VALID_IMAGE)
+        return width, height
+
+    def broken_image(self):
+        """Тестирование поломанной картинки"""
+        image = self.element_is_visible(self.locators.BROKEN_IMAGE)
+        width = image.size["width"]
+        height = image.size["height"]
+
+        return width, height
+
+
+class UploadDownloadPage(BasePage):
+    locators = UploadDownloadPageLocators
+
+    def upload_file(self):
+        file_name, path = generate_file()
+        self.element_is_present(self.locators.UPLOAD_FILE).send_keys(path)
+        os.remove(path)
+        uploaded_file_name = self.element_is_present(self.locators.UPLOADED_FILE_NAME).text
+        return file_name.split('\\')[-1], path, uploaded_file_name.split('\\')[-1]
+
+    def download_file(self):
+
+        link = self.element_is_visible(self.locators.DOWNLOAD_BUTTON).get_attribute('href')
+        check = generate_jpeg(link)
+        return check
+
+
+
+
 

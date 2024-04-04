@@ -80,7 +80,7 @@ class WebTablesLocators:
     # ROW_PARENT = ".//ancestor::div[contains(@class, 'rt-tr-group')]"
 
 
-class ButtonsLocators:
+class ButtonsPageLocators:
     """Локаторы со страницы https://demoqa.com/buttons"""
 
     # Buttons
@@ -88,6 +88,31 @@ class ButtonsLocators:
     RIGHT_CLICK_BUTTON = (By.CSS_SELECTOR, "button[id='rightClickBtn']")
     DYNAMIC_CLICK_BUTTON = (By.XPATH, "//button[text()='Click Me']")
 
+    # Outputs
     DOUBLE_CLICK_OUTPUT = (By.CSS_SELECTOR, "p[id='doubleClickMessage']")
     RIGHT_CLICK_OUTPUT = (By.CSS_SELECTOR, "p[id='rightClickMessage']")
     DYNAMIC_CLICK_OUTPUT = (By.CSS_SELECTOR, "p[id='dynamicClickMessage']")
+
+
+class LinksPageLocators:
+    """Локаторы со страницы https://demoqa.com/links"""
+
+    # Link buttons
+    SAMPLE_LINK = (By.CSS_SELECTOR, "a[id='simpleLink']")
+    BAD_REQUEST = (By.CSS_SELECTOR, "a[id='bad-request']")
+
+
+class ImageLocators:
+    """Локаторы со страницы https://demoqa.com/broken"""
+
+    # Images
+    VALID_IMAGE = (By.XPATH, "//*[text()='Valid image']/following-sibling::img[1]")
+    BROKEN_IMAGE = (By.XPATH, "//*[text()='Broken image']/following-sibling::img[1]")
+
+
+class UploadDownloadPageLocators:
+    # Buttons for file
+    DOWNLOAD_BUTTON = (By.CSS_SELECTOR, "a[id='downloadButton']")
+
+    UPLOAD_FILE = (By.CSS_SELECTOR, "input[id='uploadFile']")
+    UPLOADED_FILE_NAME = (By.CSS_SELECTOR, "p[id='uploadedFilePath']")

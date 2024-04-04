@@ -2,7 +2,8 @@ import random
 import time
 import pytest
 from pages.base_page import BasePage
-from pages.element_page import TextBoxPage, CheckBoxPage, RadioButtonPage, WebTablesPage, ButtonsPage
+from pages.element_page import TextBoxPage, CheckBoxPage, RadioButtonPage, WebTablesPage, ButtonsPage, LinksPage, \
+    BrokenPage, UploadDownloadPage
 
 
 class TestElements:
@@ -129,21 +130,67 @@ class TestElements:
             web_tables = WebTablesPage(driver, "https://demoqa.com/webtables")
             web_tables.open()
             count = web_tables.own_change_count_some_rows()
+
             assert count == [5, 10, 20, 25, 50, 100], "The number of rows has not been changed or changed incorrectly"
 
     class TestButtonInterface:
 
-        def test_double_click(self, driver):
-            button_interface = ButtonsPage(driver, "https://demoqa.com/buttons")
-            button_interface.open()
-            button_interface.double_click_button()
-            button_interface.right_click_button()
-            button_interface.left_click_button()
-            double_click, right_click, dynamic_click = button_interface.check_clicks_button()
+        def test_click_buttons(self, driver):
+            """Тестирование кликов кнопок в интерфейсе Buttons"""
+
+            button_page = ButtonsPage(driver, "https://demoqa.com/buttons")
+            button_page.open()
+            button_page.double_click_button()
+            button_page.right_click_button()
+            button_page.left_click_button()
+            double_click, right_click, dynamic_click = button_page.check_clicks_button()
+
             assert "You have done a double click" == double_click, "Double click is not performed"
             assert "You have done a right click" == right_click, "Right click is not performed"
             assert "You have done a dynamic click" == dynamic_click, "Dynamic click is not performed"
 
-            time.sleep(2)
+    class TestLinksPage:
+        """Тестирование ссылок"""
 
+        def test_check_link_page(self, driver):
+            """Тестирование ссылок которая открывается в новой вкладке"""
+            link_page = LinksPage(driver, "https://demoqa.com/links")
+            link_page.open()
+            href_link, current_url = link_page.check_new_tab_simple_link()
+            assert href_link == current_url
 
+        def test_broken_link(self, driver):
+            """Тестирование "поломанной" ссылки"""
+            link_page = LinksPage(driver, "https://demoqa.com/links")
+            link_page.open()
+            response_code = link_page.check_broken_link("https://demoqa.com/bad-request")
+            # проверка специально стоит на 400 статус код, чисто для проверки данной функции,
+            # но надо будет проверять на статус код = 200 или любой другой успешный статус
+            assert response_code == 400
+
+    class TestImage:
+        """Тестирование картинки"""
+
+        def test_valid_image(self, driver):
+            image_page = BrokenPage(driver, "https://demoqa.com/broken")
+            image_page.open()
+            width, height = image_page.valid_image()
+            # width, height = image_page.broken_image()
+
+            assert width == 347, f"Width is not equal 347. Current width = {width}"
+            assert height == 100, f"Height is not equal 347. Current height = {width}"
+
+    class TestDownloadAndUpload:
+
+        def test_download_file(self, driver):
+            download_upload_page = UploadDownloadPage(driver, "https://demoqa.com/upload-download")
+            download_upload_page.open()
+            check = download_upload_page.download_file()
+            assert check is True, "The file is not downloaded"
+
+        def test_upload_file(self, driver):
+            download_upload_page = UploadDownloadPage(driver, "https://demoqa.com/upload-download")
+            download_upload_page.open()
+            file_name, path, uploaded_file_name = download_upload_page.upload_file()
+
+            assert file_name == uploaded_file_name, "File is not uploaded"
