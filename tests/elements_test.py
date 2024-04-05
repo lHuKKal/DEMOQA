@@ -216,8 +216,10 @@ class TestElements:
             assert check == "File is downloaded"
 
     class TestDynamicProperties:
+        """Тестирование данимаических кнопок в интерфейсе Dynamic Properties"""
 
         def test_dynamic_properties_buttons(self, driver):
+            """Тестирование смена цвета после 5 секунд"""
             dynamic_properties_page = DynamicPropertiesPage(driver, "https://demoqa.com/dynamic-properties")
             dynamic_properties_page.open()
             color_before_button, color_after_five_seconds = dynamic_properties_page.check_changed_color_of_button()
@@ -225,6 +227,7 @@ class TestElements:
             assert color_before_button != color_after_five_seconds
 
         def test_button_is_displayed_after_five_seconds(self, driver):
+            """Тестирование видимости кнопки после 5 сек"""
             dynamic_properties_page = DynamicPropertiesPage(driver, "https://demoqa.com/dynamic-properties")
             dynamic_properties_page.open()
             resul_button = dynamic_properties_page.check_button_is_displayed_after_five_seconds()
@@ -232,6 +235,7 @@ class TestElements:
             assert resul_button is True, "Button is not displayed after 5 seconds"
 
         def test_button_is_enable(self, driver):
+            """Тестирование, что кнопка кликабельна после 5 секунд"""
             dynamic_properties_page = DynamicPropertiesPage(driver, "https://demoqa.com/dynamic-properties")
             dynamic_properties_page.open()
             result_button = dynamic_properties_page.check_button_is_enabled()

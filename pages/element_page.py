@@ -446,7 +446,7 @@ class DynamicPropertiesPage(BasePage):
         return True
 
     def check_button_is_enabled(self):
-
+        # Обработка исключений
         try:
             self.element_is_clickable(self.locators.WILL_ENABLE_BUTTON, 6)
         except TimeoutException:
