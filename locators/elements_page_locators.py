@@ -116,3 +116,10 @@ class UploadDownloadPageLocators:
 
     UPLOAD_FILE = (By.CSS_SELECTOR, "input[id='uploadFile']")
     UPLOADED_FILE_NAME = (By.CSS_SELECTOR, "p[id='uploadedFilePath']")
+
+
+class DynamicPropertiesLocators:
+    # Dynamic buttons
+    WILL_ENABLE_BUTTON = (By.CSS_SELECTOR, "button[id='enableAfter']")
+    COLOR_CHANGE_BUTTON = (By.CSS_SELECTOR, "button[id='colorChange']")
+    VISIBLE_AFTER_5_SECONDS_BUTTON = (By.CSS_SELECTOR, "button[id='visibleAfter']")

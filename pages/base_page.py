@@ -44,7 +44,7 @@ class BasePage:
     def image_get_width_and_height(self, image_locator):
         """
         Взять высоту и длину картинки. Обязательно необходимо создать
-        2 переменные с width и height для использования данной функции
+        2 переменные с width и height для возврата данных
         """
         image = self.element_is_visible(image_locator)
         width = image.size["width"]

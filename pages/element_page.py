@@ -11,7 +11,8 @@ from selenium.webdriver.common.action_chains import ActionChains
 
 from generator.generator import generate_person, generate_file, generate_jpeg
 from locators.elements_page_locators import TextBoxPageLocators, CheckBoxPageLocators, RadioButtonsLocators, \
-    WebTablesLocators, ButtonsPageLocators, LinksPageLocators, ImageLocators, UploadDownloadPageLocators
+    WebTablesLocators, ButtonsPageLocators, LinksPageLocators, ImageLocators, UploadDownloadPageLocators, \
+    DynamicPropertiesLocators
 from pages.base_page import BasePage
 
 faker_ru = Faker("ru_RU")
@@ -354,9 +355,11 @@ class BrokenPage(BasePage):
 
 
 class UploadDownloadPage(BasePage):
+    """Тестирование скачивание и загрузки файла"""
     locators = UploadDownloadPageLocators
 
     def upload_file(self):
+        # Генерируем случайный файл
         file_name, path = generate_file()
         self.element_is_present(self.locators.UPLOAD_FILE).send_keys(path)
         os.remove(path)
@@ -369,7 +372,61 @@ class UploadDownloadPage(BasePage):
         check = generate_jpeg(link)
         return check
 
+    def check_file_is_download(self, file_name):
+        """Тестирование скачивания файла и проверки по его имени (если мы знаем имя файла)"""
+        self.element_is_visible(self.locators.DOWNLOAD_BUTTON).click()
+        time.sleep(5)
+        downloads_dir = os.path.expanduser('~') + '\\Downloads'  # Путь к папке Загрузки
+        file_path = os.path.join(downloads_dir, file_name)
 
+        # Проверка, что файл скачан и его размер больше нуля
+        if os.path.isfile(file_path) and os.path.getsize(file_path) > 0:
+            # удаляем скаченный файл и возвращаем результат
+            os.remove(file_path)
+            return "File is downloaded"
+        else:
+            # Файл не найден или его размер равен нулю
+            return "File is not downloaded"
+
+    @staticmethod
+    def get_current_downloads():
+        """Возвращает список текущих файлов в папке загрузок."""
+        # Универсальный путь для все ОС к папке Downloads
+        downloads_dir = os.path.join(os.path.expanduser('~'), 'Downloads')
+        return os.listdir(downloads_dir)
+
+    def get_new_download(self):
+        """Возвращает новый файл, который не был в списке предыдущих файлов."""
+        # Берем список текущих файлов в папке "Download"
+        current_files_before = self.get_current_downloads()
+        # Cкачиваем файл
+        self.element_is_visible(self.locators.DOWNLOAD_BUTTON).click()
+        time.sleep(5)
+        # Берем список файлов после загрузки файла
+        current_files_after = self.get_current_downloads()
+        # Находим загруженный файл, если он есть, то вернем его, если нет возвращается значение как None
+        new_files = list(set(current_files_after) - set(current_files_before))
+        return new_files[0] if new_files else None
+
+    @staticmethod
+    def check_download_dynamic_name(file_name):
+        """Проверяет, является ли файл действительным загруженным файлом."""
+        downloads_dir = os.path.expanduser('~') + '\\Downloads'
+        file_path = os.path.join(downloads_dir, file_name)
+
+        if os.path.isfile(file_path):
+            # Проверяем, что файл загружен и его размер больше нуля
+            if os.path.getsize(file_path) > 0:
+                # Проверяем, что это изображение JPEG
+                if file_name.lower().endswith('.jpg') or file_name.lower().endswith('.jpeg'):
+                    os.remove(file_path)
+                    return "File is downloaded"
+        return "File is not downloaded"
+
+class DynamicPropertiesPage(BasePage):
+    locators = DynamicPropertiesLocators
+    def dynamic_buttons(self):
+        pass
 
 
 

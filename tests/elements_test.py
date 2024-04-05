@@ -3,7 +3,7 @@ import time
 import pytest
 from pages.base_page import BasePage
 from pages.element_page import TextBoxPage, CheckBoxPage, RadioButtonPage, WebTablesPage, ButtonsPage, LinksPage, \
-    BrokenPage, UploadDownloadPage
+    BrokenPage, UploadDownloadPage, DynamicPropertiesPage
 
 
 class TestElements:
@@ -169,7 +169,7 @@ class TestElements:
             assert response_code == 400
 
     class TestImage:
-        """Тестирование картинки"""
+        """Тестирование картинок в интерфейсе Upload and Download"""
 
         def test_valid_image(self, driver):
             image_page = BrokenPage(driver, "https://demoqa.com/broken")
@@ -183,14 +183,47 @@ class TestElements:
     class TestDownloadAndUpload:
 
         def test_download_file(self, driver):
+            """Тестирование скачивание файла"""
             download_upload_page = UploadDownloadPage(driver, "https://demoqa.com/upload-download")
             download_upload_page.open()
             check = download_upload_page.download_file()
+
             assert check is True, "The file is not downloaded"
 
         def test_upload_file(self, driver):
+            """Тестирование загрузки файла"""
             download_upload_page = UploadDownloadPage(driver, "https://demoqa.com/upload-download")
             download_upload_page.open()
             file_name, path, uploaded_file_name = download_upload_page.upload_file()
 
             assert file_name == uploaded_file_name, "File is not uploaded"
+
+        def test_download_file_own(self, driver):
+            """Проверка на загрузку файла (собственный метод)"""
+            download_upload_page = UploadDownloadPage(driver, "https://demoqa.com/upload-download")
+            download_upload_page.open()
+            check_download = download_upload_page.check_file_is_download("sampleFile.jpeg")
+
+            assert check_download == "File is downloaded", "File is not downloaded"
+
+        def test_dynamic_name_file_download(self, driver):
+            """Тестирование загрузку файла, если бы имя файла было бы динамическое"""
+            download_upload_page = UploadDownloadPage(driver, "https://demoqa.com/upload-download")
+            download_upload_page.open()
+            file = download_upload_page.get_new_download()
+            check = download_upload_page.check_download_dynamic_name(file)
+
+            assert check == "File is downloaded"
+
+    class TestDynamicProperties:
+
+        def test_dynamic_properties_buttons(self, driver):
+            dynamic_properties_page = DynamicPropertiesPage(driver, "https://demoqa.com/dynamic-properties")
+            dynamic_properties_page.open()
+
+            pass
+
+
+
+
+
