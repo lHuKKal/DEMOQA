@@ -220,8 +220,25 @@ class TestElements:
         def test_dynamic_properties_buttons(self, driver):
             dynamic_properties_page = DynamicPropertiesPage(driver, "https://demoqa.com/dynamic-properties")
             dynamic_properties_page.open()
+            color_before_button, color_after_five_seconds = dynamic_properties_page.check_changed_color_of_button()
 
-            pass
+            assert color_before_button != color_after_five_seconds
+
+        def test_button_is_displayed_after_five_seconds(self, driver):
+            dynamic_properties_page = DynamicPropertiesPage(driver, "https://demoqa.com/dynamic-properties")
+            dynamic_properties_page.open()
+            resul_button = dynamic_properties_page.check_button_is_displayed_after_five_seconds()
+
+            assert resul_button is True, "Button is not displayed after 5 seconds"
+
+        def test_button_is_enable(self, driver):
+            dynamic_properties_page = DynamicPropertiesPage(driver, "https://demoqa.com/dynamic-properties")
+            dynamic_properties_page.open()
+            result_button = dynamic_properties_page.check_button_is_enabled()
+
+            assert result_button is True, "Button is not clickable after 5 seconds"
+
+
 
 
 

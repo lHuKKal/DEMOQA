@@ -5,6 +5,7 @@ import time
 
 import requests
 from faker import Faker
+from selenium.common import TimeoutException
 from selenium.webdriver.common.by import By
 from selenium.webdriver import Keys
 from selenium.webdriver.common.action_chains import ActionChains
@@ -423,10 +424,33 @@ class UploadDownloadPage(BasePage):
                     return "File is downloaded"
         return "File is not downloaded"
 
+
 class DynamicPropertiesPage(BasePage):
     locators = DynamicPropertiesLocators
-    def dynamic_buttons(self):
-        pass
 
+    def check_changed_color_of_button(self):
+
+        color_button = self.element_is_present(self.locators.COLOR_CHANGE_BUTTON)
+        color_before_button = color_button.value_of_css_property('color')
+        time.sleep(6)
+        color_after_five_seconds = color_button.value_of_css_property('color')
+
+        return color_before_button, color_after_five_seconds
+
+    def check_button_is_displayed_after_five_seconds(self):
+
+        try:
+            self.element_is_visible(self.locators.VISIBLE_AFTER_FIVE_SECONDS_BUTTON)
+        except TimeoutException:
+            return False
+        return True
+
+    def check_button_is_enabled(self):
+
+        try:
+            self.element_is_clickable(self.locators.WILL_ENABLE_BUTTON, 6)
+        except TimeoutException:
+            return False
+        return True
 
 
