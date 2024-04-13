@@ -20,6 +20,7 @@ def generate_person():
         age=faker_ru.random_int(min=1, max=99),
         salary=faker_ru.random_int(min=1000, max=999999),
         departament=faker_ru.job(),
+        mobile=faker_ru.random_int(min=1000000000, max=9999999999),
     )
 
 
@@ -53,3 +54,37 @@ def generate_jpeg(link):
         check_file = os.path.exists(path)
     os.remove(path)
     return check_file
+
+
+def subject_keys():
+    subject_values = {
+        "Hindi": 'Hindi',
+        "English": 'English',
+        "Maths": 'Maths',
+        "Physics": 'Physics',
+        "Chemistry": 'Chemistry',
+        "Biology": 'Biology',
+        "Computer Science": 'Computer Science',
+        "Commerce": 'Commerce',
+        "Accounting": 'Accounting',
+        "Economics": 'Economics',
+        "Arts": 'Arts',
+        "Social Studies": 'Social Studies',
+        "History": 'History',
+        "Civics": 'Civics',
+    }
+    return subject_values
+
+
+def get_states_and_cities():
+    """Штаты и города"""
+    states_and_cities = {
+        "NCR": ["Delhi", "Gurgaon", "Noida"],
+        "Uttar Pradesh": ["Agra", "Lucknow", "Merrut"],
+        "Haryana": ["Panipat", "Karnal"],
+        "Rajasthan": ["Jaipur", "Jaiselmer"]
+    }
+    return states_and_cities
+
+
+

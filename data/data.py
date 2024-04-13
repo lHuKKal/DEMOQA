@@ -12,6 +12,7 @@ class Person:
     age: str = None
     salary: str = None
     departament: str = None
+    mobile: int = None
 
 
 
