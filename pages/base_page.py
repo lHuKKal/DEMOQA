@@ -51,6 +51,13 @@ class BasePage:
         height = image.size["height"]
         return width, height
 
+    def switch_to_tab(self, index_of_tab):
+        self.driver.switch_to.window(self.driver.window_handles[index_of_tab])
+
+    def switch_to_alert(self):
+        """Switch to alert window"""
+        alert = self.driver.switch_to.alert
+        return alert
 
 
 

@@ -4,6 +4,8 @@ from selenium.webdriver.common.by import By
 
 
 class PracticeFormLocators:
+    """Локаторы со страницы https://demoqa.com/automation-practice-form"""
+
     # Data Fields
     FIRST_NAME = (By.CSS_SELECTOR, "input[id='firstName']")
     LAST_NAME = (By.CSS_SELECTOR, "input[id='lastName']")
