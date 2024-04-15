@@ -19,6 +19,7 @@ class TestAlertFrameWindows:
     class TestAlerts:
 
         def test_alerts(self, driver):
+            """Тестирование логики алертов"""
             alert_page = AlertsPage(driver, "https://demoqa.com/alerts")
             alert_page.open()
             alert_after_click = alert_page.alert_after_click()

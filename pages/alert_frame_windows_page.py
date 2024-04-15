@@ -38,6 +38,7 @@ class AlertsPage(BasePage):
     locators = AlertsLocators
 
     def alert_after_click(self):
+        """Логика тестирование алерта после клика на кнопку"""
         self.element_is_visible(self.locators.ALERT_BUTTON).click()
         alert_window = self.switch_to_alert()
         text = alert_window.text
@@ -45,6 +46,7 @@ class AlertsPage(BasePage):
         return text
 
     def alert_displayed_after_five_seconds(self):
+        """Алерт отображается через 5 секунд после клика на кнопку"""
         self.element_is_visible(self.locators.ALERT_AFTER_5_SECONDS_BUTTON).click()
         time.sleep(5.1)
         alert = self.driver.switch_to.alert
@@ -53,6 +55,7 @@ class AlertsPage(BasePage):
         return text
 
     def confirm_alert(self):
+        """Подтверждающий аллерт"""
         self.element_is_visible(self.locators.ALERT_CONFIRM_BUTTON).click()
         alert = self.switch_to_alert()
         alert.accept()
@@ -61,6 +64,7 @@ class AlertsPage(BasePage):
         return text_after_click
 
     def prompt_alert(self):
+        """Алерт где необходимо ввести какой-нибудь тест"""
         text = f"Autotest send keys - {random.randint(1, 100)}"
 
         self.element_is_visible(self.locators.ALERT_PROMPT_BUTTON).click()
