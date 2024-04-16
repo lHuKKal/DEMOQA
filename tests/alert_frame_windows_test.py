@@ -50,20 +50,22 @@ class TestAlertFrameWindows:
             nested_frames_page = NestedFramesPage(driver, "https://demoqa.com/nestedframes")
             nested_frames_page.open()
             parent_tite, child_title = nested_frames_page.check_nested_frames()
+            print(child_title)
 
             assert parent_tite == "Parent frame", "Parent frame doesn't exist"
-            assert child_title == "Child Iframe" "Child frame doesn't exist"
+            assert child_title == "Child Iframe", "Child frame doesn't exist"
 
     class TestModalDialogs:
 
         def test_modal_dialogs(self, driver):
             modal_dialogs_page = ModalDialogsPage(driver, "https://demoqa.com/modal-dialogs")
             modal_dialogs_page.open()
-            small_window_title, large_modal_title = modal_dialogs_page.check_small_and_large_modal_dialogs()
+            small_window_title = modal_dialogs_page.check_small_modal_dialog_is_opened()
+            small_modal_window_not_visible = modal_dialogs_page.check_small_modal_is_closed()
+            large_window_title = modal_dialogs_page.check_large_modal_dialog_is_opened()
+            large_modal_window_is_closed = modal_dialogs_page.check_large_modal_is_closed()
 
             assert small_window_title == "Small Modal", "Small modal window doesn't open"
-            assert large_modal_title == "Large modal", "Small modal window doesn't open"
-
-
-
-
+            assert small_modal_window_not_visible is True, "Small modal window is not closed"
+            assert large_window_title == "Large modal", "Large modal window doesn't open"
+            assert large_modal_window_is_closed is True, "Large modal window is not closed"

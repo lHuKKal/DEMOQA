@@ -1,6 +1,8 @@
 import random
 import time
 
+from selenium.common import TimeoutException
+
 from locators.alert_frame_windows_page_locators import BrowserWindowsLocators, AlertsLocators, FramesPageLocators, \
     NestedFramesLocators, ModalDialogsLocators
 from pages.base_page import BasePage
@@ -120,17 +122,37 @@ class NestedFramesPage(BasePage):
 class ModalDialogsPage(BasePage):
     locators = ModalDialogsLocators
 
-    def check_small_and_large_modal_dialogs(self):
-
+    def check_small_modal_dialog_is_opened(self):
         self.element_is_visible(self.locators.SMALL_MODAL_BUTTON).click()
         small_window_title = self.element_is_present(self.locators.SMALL_MODAL_TITLE).text
         self.element_is_visible(self.locators.SMALL_MODAL_CLOSE).click()
+        time.sleep(0.2)
 
+        return small_window_title
+
+    def check_large_modal_dialog_is_opened(self):
         self.element_is_visible(self.locators.LARGE_MODAL_BUTTON).click()
         large_modal_title = self.element_is_present(self.locators.LARGE_MODAL_BUTTON).text
         self.element_is_visible(self.locators.LARGE_MODAL_CLOSE).click()
+        time.sleep(0.2)
 
-        return small_window_title, large_modal_title
+        return large_modal_title
+
+    def check_small_modal_is_closed(self):
+        try:
+            self.element_is_not_visible(self.locators.SMALL_MODAL_TITLE)
+        except TimeoutException:
+            return False
+        return True
+
+    def check_large_modal_is_closed(self):
+        try:
+            self.element_is_not_visible(self.locators.LARGE_MODAL_TITLE)
+        except TimeoutException:
+            return False
+        return True
+
+
 
 
 
