@@ -16,6 +16,16 @@ class AlertsLocators:
     ALERT_BUTTON = (By.CSS_SELECTOR, "button[id='alertButton']")
     ALERT_AFTER_5_SECONDS_BUTTON = (By.CSS_SELECTOR, "button[id='timerAlertButton']")
     ALERT_CONFIRM_BUTTON = (By.CSS_SELECTOR, "button[id='confirmButton']")
-    ALERT_CONFIRM_TEXT_AFTER_ACCEPT = (By.CSS_SELECTOR, "span[id='confirmResult']")
     ALERT_PROMPT_BUTTON = (By.CSS_SELECTOR, "button[id='promtButton']")
+
+    # Text locators
     ALERT_PROMPT_TEXT_AFTER_ACCEPT = (By.CSS_SELECTOR, "span[id='promptResult']")
+    ALERT_CONFIRM_TEXT_AFTER_ACCEPT = (By.CSS_SELECTOR, "span[id='confirmResult']")
+
+
+class FramesPageLocators:
+    FIRST_FRAME = (By.CSS_SELECTOR, "iframe[id='frame1']")
+    SECOND_FRAME = (By.CSS_SELECTOR, "iframe[id='frame2']")
+
+    # Title
+    FRAME_TITLE = (By.CSS_SELECTOR, "h1[id='sampleHeading']")

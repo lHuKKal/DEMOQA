@@ -1,6 +1,6 @@
 import time
 
-from pages.alert_frame_windows_page import BrowserWindowsPage, AlertsPage
+from pages.alert_frame_windows_page import BrowserWindowsPage, AlertsPage, FramesPage
 
 
 class TestAlertFrameWindows:
@@ -31,3 +31,16 @@ class TestAlertFrameWindows:
             assert alert_after_five_seconds == "This alert appeared after 5 seconds", "Alert is not displayed after 5 sec."
             assert alert_after_accept == "You selected Ok", "Alert is not displayed after click"
             assert text in alert_prompt_result, "Entered value is not matched with result"
+
+    class TestFrames:
+
+        def test_frames(self, driver):
+            frames_page = FramesPage(driver, "https://demoqa.com/frames")
+            frames_page.open()
+            result_frame_1 = frames_page.check_frames("frame1")
+            result_frame_2 = frames_page.check_frames("frame2")
+
+            assert result_frame_1 == ['This is a sample page', '500px', '350px'], "The frame doesn't exist"
+            assert result_frame_2 == ['This is a sample page', '100px', '100px'], "The frame doesn't exist"
+
+

@@ -59,6 +59,9 @@ class BasePage:
         alert = self.driver.switch_to.alert
         return alert
 
+    def switch_to_frame_by_locator(self, locator):
+        self.driver.switch_to.frame(locator)
+
 
 
 

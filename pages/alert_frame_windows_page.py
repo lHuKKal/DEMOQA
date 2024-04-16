@@ -1,7 +1,7 @@
 import random
 import time
 
-from locators.alert_frame_windows_page_locators import BrowserWindowsLocators, AlertsLocators
+from locators.alert_frame_windows_page_locators import BrowserWindowsLocators, AlertsLocators, FramesPageLocators
 from pages.base_page import BasePage
 
 
@@ -64,7 +64,7 @@ class AlertsPage(BasePage):
         return text_after_click
 
     def prompt_alert(self):
-        """Алерт где необходимо ввести какой-нибудь тест"""
+        """Алерт где необходимо ввести какой-нибудь текст"""
         text = f"Autotest send keys - {random.randint(1, 100)}"
 
         self.element_is_visible(self.locators.ALERT_PROMPT_BUTTON).click()
@@ -75,5 +75,28 @@ class AlertsPage(BasePage):
 
         return result, text
 
+
+class FramesPage(BasePage):
+    locators = FramesPageLocators
+
+    def check_frames(self, frame_number):
+
+        if frame_number == 'frame1':
+            frame = self.element_is_present(self.locators.FIRST_FRAME)
+            width = frame.get_attribute("width")
+            height = frame.get_attribute("height")
+            self.switch_to_frame_by_locator(frame)
+            text = self.element_is_present(self.locators.FRAME_TITLE).text
+            self.driver.switch_to.default_content()
+            return [text, width, height]
+
+        if frame_number == 'frame2':
+            frame = self.element_is_present(self.locators.SECOND_FRAME)
+            width = frame.get_attribute("width")
+            height = frame.get_attribute("height")
+            self.switch_to_frame_by_locator(frame)
+            text = self.element_is_present(self.locators.FRAME_TITLE).text
+            self.driver.switch_to.default_content()
+            return [text, width, height]
 
 
