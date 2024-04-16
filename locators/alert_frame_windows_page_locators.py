@@ -29,3 +29,13 @@ class FramesPageLocators:
 
     # Title
     FRAME_TITLE = (By.CSS_SELECTOR, "h1[id='sampleHeading']")
+
+
+class NestedFramesLocators:
+    # Frames
+    PARENT_FRAMES = (By.CSS_SELECTOR, "iframe[id='frame1']")
+    CHILD_IFRAME = (By.CSS_SELECTOR, 'iframe[srcdoc="<p>Child Iframe</p>"]')
+
+    # Title
+    PARENT_TITLE = (By.XPATH, "//*[text()='Parent frame']")
+    CHILD_TITLE = (By.CSS_SELECTOR, "p")

@@ -1,7 +1,8 @@
 import random
 import time
 
-from locators.alert_frame_windows_page_locators import BrowserWindowsLocators, AlertsLocators, FramesPageLocators
+from locators.alert_frame_windows_page_locators import BrowserWindowsLocators, AlertsLocators, FramesPageLocators, \
+    NestedFramesLocators
 from pages.base_page import BasePage
 
 
@@ -65,6 +66,7 @@ class AlertsPage(BasePage):
 
     def prompt_alert(self):
         """Алерт где необходимо ввести какой-нибудь текст"""
+
         text = f"Autotest send keys - {random.randint(1, 100)}"
 
         self.element_is_visible(self.locators.ALERT_PROMPT_BUTTON).click()
@@ -100,3 +102,17 @@ class FramesPage(BasePage):
             return [text, width, height]
 
 
+class NestedFramesPage(BasePage):
+    locators = NestedFramesLocators
+
+    def check_nested_frames(self):
+
+        parent_frame = self.element_is_present(self.locators.PARENT_FRAMES)
+        self.switch_to_frame_by_locator(parent_frame)
+        parent_title = self.element_is_present(self.locators.PARENT_TITLE).text
+
+        child_frame = self.element_is_present(self.locators.CHILD_IFRAME)
+        self.switch_to_frame_by_locator(child_frame)
+        child_title = self.element_is_present(self.locators.CHILD_TITLE).text
+
+        return parent_title, child_title
