@@ -39,3 +39,14 @@ class NestedFramesLocators:
     # Title
     PARENT_TITLE = (By.XPATH, "//*[text()='Parent frame']")
     CHILD_TITLE = (By.CSS_SELECTOR, "p")
+
+
+class ModalDialogsLocators:
+    SMALL_MODAL_BUTTON = (By.CSS_SELECTOR, "button[id='showSmallModal']")
+    SMALL_MODAL_TITLE = (By.CSS_SELECTOR, "div[id='example-modal-sizes-title-sm']")
+    SMALL_MODAL_CLOSE = (By.CSS_SELECTOR, "button[id='closeSmallModal']")
+
+    LARGE_MODAL_BUTTON = (By.CSS_SELECTOR, "button[id='showLargeModal']")
+    LARGE_MODAL_TITLE = (By.CSS_SELECTOR, "div[id='example-modal-sizes-title-lg]")
+    LARGE_MODAL_CLOSE = (By.CSS_SELECTOR, "button[id='closeLargeModal']")
+
