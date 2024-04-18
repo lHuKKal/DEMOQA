@@ -11,3 +11,14 @@ class AccordianLocators:
     FIRST_SECTION_TEXT = (By.CSS_SELECTOR, "div[id='section1Content'] p")
     SECOND_SECTION_TEXT = (By.CSS_SELECTOR, "div[id='section2Content'] p")
     THIRD_SECTION_TEXT = (By.CSS_SELECTOR, "div[id='section3Content'] p")
+
+
+class AutoCompleteLocators:
+    # Input
+    MULTIPLE_TYPE_FIELD = (By.CSS_SELECTOR, "input[id='autoCompleteMultipleInput']")
+    SINGLE_TYPE_FIELD = (By.CSS_SELECTOR, "input[id='autoCompleteSingleInput']")
+
+    # Result form fields
+    MULTIPLE_TYPE_RESULT = (By.CSS_SELECTOR, "div[class='auto-complete__value-container auto-complete__value-container--is-multi auto-complete__value-container--has-value css-1hwfws3']")
+    SINGE_TYPE_RESULT = (By.CSS_SELECTOR, "div[class='auto-complete__single-value css-1uccc91-singleValue']")
+

@@ -87,4 +87,20 @@ def get_states_and_cities():
     return states_and_cities
 
 
+def multiple_color():
 
+    multiple_color_key = {
+
+        "Red": "Red",
+        "Blue": "Blue",
+        "Green": "Green",
+        "Yellow": "Yellow",
+        "Purple": "Purple",
+        "Black": "Black",
+        "White": "White",
+        "Voilet": "Voilet",
+        "Indigo": "Indigo",
+        "Magenta": "Magenta",
+        "Aqua": "Aqua"
+    }
+    return multiple_color_key
