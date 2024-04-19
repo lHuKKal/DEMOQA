@@ -22,3 +22,6 @@ class AutoCompleteLocators:
     MULTIPLE_TYPE_RESULT = (By.CSS_SELECTOR, "div[class='auto-complete__value-container auto-complete__value-container--is-multi auto-complete__value-container--has-value css-1hwfws3']")
     SINGE_TYPE_RESULT = (By.CSS_SELECTOR, "div[class='auto-complete__single-value css-1uccc91-singleValue']")
 
+    # Clear button
+    MULTIPLE_TYPE_CLEAR_BUTTON = (By.CSS_SELECTOR, "div[class='auto-complete__indicators css-1wy0on6']")
+

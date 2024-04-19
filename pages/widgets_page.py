@@ -1,6 +1,7 @@
 import random
 import time
 
+from selenium.common import TimeoutException
 from selenium.webdriver import Keys
 
 from generator.generator import multiple_color
@@ -77,3 +78,12 @@ class AutoCompletePage(BasePage):
 
         selected_single_color = self.element_is_present(self.locators.SINGE_TYPE_RESULT).text
         return selected_single_color
+
+    def check_clear_field(self):
+
+        self.element_is_visible(self.locators.MULTIPLE_TYPE_CLEAR_BUTTON).click()
+        try:
+            self.element_is_present(self.locators.MULTIPLE_TYPE_RESULT, 1)
+        except TimeoutException:
+            return True
+        return False

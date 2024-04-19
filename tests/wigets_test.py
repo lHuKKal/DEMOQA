@@ -26,7 +26,10 @@ class TestAutoComplete:
         one_color = auto_complete_page.select_color()
         result_some_colors = auto_complete_page.check_selected_colors()
         result_single_color = auto_complete_page.check_selected_one_color()
+        result_empty_multiple_field = auto_complete_page.check_clear_field()
 
         assert selected_colors == result_some_colors, "Selected colors is not matched with result"
         assert one_color == result_single_color, "Selected color is not matched with result"
+        assert result_empty_multiple_field is True, "Multiple color field is not cleared"
+
 
