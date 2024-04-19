@@ -22,14 +22,16 @@ class TestAutoComplete:
     def test_auto_complete_page(self, driver):
         auto_complete_page = AutoCompletePage(driver, "https://demoqa.com/auto-complete")
         auto_complete_page.open()
-        selected_colors = auto_complete_page.select_some_multiple_color(11)
-        one_color = auto_complete_page.select_color()
-        result_some_colors = auto_complete_page.check_selected_colors()
+        several_colors = auto_complete_page.select_several_color_for_multi_field(11)
+        one_color = auto_complete_page.select_single_color()
+        result_some_colors = auto_complete_page.check_selected_several_colors()
         result_single_color = auto_complete_page.check_selected_one_color()
-        result_empty_multiple_field = auto_complete_page.check_clear_field()
+        result_after_clear_for_check, removed_value = auto_complete_page.check_remove_value_from_multi_field(2)
+        print(removed_value)
 
-        assert selected_colors == result_some_colors, "Selected colors is not matched with result"
+        assert several_colors == result_some_colors, "Selected colors is not matched with result"
         assert one_color == result_single_color, "Selected color is not matched with result"
+        assert removed_value not in result_after_clear_for_check, f"Value '{removed_value}' is not removed from the Multi field"
+
+        result_empty_multiple_field = auto_complete_page.check_cleared_field()
         assert result_empty_multiple_field is True, "Multiple color field is not cleared"
-
-

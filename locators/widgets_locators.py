@@ -21,7 +21,9 @@ class AutoCompleteLocators:
     # Result form fields
     MULTIPLE_TYPE_RESULT = (By.CSS_SELECTOR, "div[class='auto-complete__value-container auto-complete__value-container--is-multi auto-complete__value-container--has-value css-1hwfws3']")
     SINGE_TYPE_RESULT = (By.CSS_SELECTOR, "div[class='auto-complete__single-value css-1uccc91-singleValue']")
+    MULTIPLE_TYPE_TAKE_CLEARED_VALUE = (By.XPATH, "//div[@class='css-xb97g8 auto-complete__multi-value__remove']/parent::div//div[1]")
 
     # Clear button
     MULTIPLE_TYPE_CLEAR_BUTTON = (By.CSS_SELECTOR, "div[class='auto-complete__indicators css-1wy0on6']")
+    MULTIPLE_TYPE_CLEAR_ONE_VALUE_BUTTON = (By.CSS_SELECTOR, "div[class='css-xb97g8 auto-complete__multi-value__remove']")
 
