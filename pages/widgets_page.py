@@ -132,7 +132,7 @@ class DatePickerPage(BasePage):
 
     def select_date_by_text(self):
         random_year, random_month, random_day = random_year_between_five_years()
-        date_before = self.element_is_visible(self.locators.DATE_INPUT).text
+        date_before = self.element_is_visible(self.locators.DATE_INPUT).get_attribute('value')
 
         self.element_is_visible(self.locators.DATE_INPUT).send_keys(Keys.CONTROL + "a")
         self.element_is_visible(self.locators.DATE_INPUT).send_keys(Keys.DELETE)
@@ -140,7 +140,7 @@ class DatePickerPage(BasePage):
             random_year + "/" + random_month + "/" + random_day)
         self.element_is_visible(self.locators.DATE_INPUT).send_keys(Keys.ENTER)
 
-        date_after = self.element_is_visible(self.locators.DATE_INPUT).text
+        date_after = self.element_is_visible(self.locators.DATE_INPUT).get_attribute('value')
 
         return date_before, date_after
 
@@ -149,7 +149,7 @@ class DatePickerPage(BasePage):
         day = not_today_day()
         date_and_time_input = self.element_is_visible(self.locators.DATE_AND_TIME_INPUT)
 
-        date_and_time_value_date_before = date_and_time_input.get_attribute('value')
+        date_and_time_value_before = date_and_time_input.get_attribute('value')
 
         date_and_time_input.click()
         self.element_is_visible(self.locators.DATE_AND_TIME_MONTH).click()
@@ -158,6 +158,6 @@ class DatePickerPage(BasePage):
         self.set_date_item_from_list(self.locators.DATE_AND_TIME_YEAR_LIST, year)
         self.set_date_item_from_list(self.locators.DATE_SELECT_DAY_LIST, day)
 
-        date_and_time_value_date_after = date_and_time_input.get_attribute('value')
+        date_and_time_value_after = date_and_time_input.get_attribute('value')
 
-        return date_and_time_value_date_before, date_and_time_value_date_after
+        return date_and_time_value_before, date_and_time_value_after

@@ -42,10 +42,8 @@ class TestDateTime:
         date_picker_page = DatePickerPage(driver, "https://demoqa.com/date-picker")
         date_picker_page.open()
         # value_date_before, value_date_after = date_picker_page.select_date()
-        # value_date_before, value_date_after = date_picker_page.select_date_by_text()
-        time.sleep(2)
-        date_and_time_value_date_before, date_and_time_value_date_after = date_picker_page.select_date_and_time()
+        value_date_before, value_date_after = date_picker_page.select_date_by_text()
+        date_and_time_value_before, date_and_time_value_after = date_picker_page.select_date_and_time()
 
-        print(date_and_time_value_date_before)
-        print(date_and_time_value_date_after)
-
+        assert value_date_before != value_date_after, "Date is not changed in the 'Select Date' field"
+        assert date_and_time_value_before != date_and_time_value_after, "Date is not changed in the 'Date And Time' field"
