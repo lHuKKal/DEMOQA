@@ -1,6 +1,6 @@
 import time
 
-from pages.widgets_page import AccordianPage, AutoCompletePage
+from pages.widgets_page import AccordianPage, AutoCompletePage, DatePickerPage
 
 
 class TestAccordian:
@@ -27,7 +27,6 @@ class TestAutoComplete:
         result_some_colors = auto_complete_page.check_selected_several_colors()
         result_single_color = auto_complete_page.check_selected_one_color()
         result_after_clear_for_check, removed_value = auto_complete_page.check_remove_value_from_multi_field(2)
-        print(removed_value)
 
         assert several_colors == result_some_colors, "Selected colors is not matched with result"
         assert one_color == result_single_color, "Selected color is not matched with result"
@@ -35,3 +34,18 @@ class TestAutoComplete:
 
         result_empty_multiple_field = auto_complete_page.check_cleared_field()
         assert result_empty_multiple_field is True, "Multiple color field is not cleared"
+
+
+class TestDateTime:
+
+    def test_date_time(self, driver):
+        date_picker_page = DatePickerPage(driver, "https://demoqa.com/date-picker")
+        date_picker_page.open()
+        # value_date_before, value_date_after = date_picker_page.select_date()
+        # value_date_before, value_date_after = date_picker_page.select_date_by_text()
+        time.sleep(2)
+        date_and_time_value_date_before, date_and_time_value_date_after = date_picker_page.select_date_and_time()
+
+        print(date_and_time_value_date_before)
+        print(date_and_time_value_date_after)
+

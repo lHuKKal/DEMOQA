@@ -15,5 +15,9 @@ class Person:
     mobile: int = None
 
 
-
-
+@dataclass
+class Date:
+    day: str = None
+    month: str = None
+    year: str = None
+    time: str = None

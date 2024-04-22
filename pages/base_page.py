@@ -1,3 +1,4 @@
+from selenium.webdriver.support.select import Select
 from selenium.webdriver.support.ui import WebDriverWait as wait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
@@ -33,6 +34,17 @@ class BasePage:
         element = self.driver.find_element(*locator)  # Извлекаем элемент из кортежа
         self.driver.execute_script("arguments[0].scrollIntoView(true);", element)
 
+    def set_date_by_text(self, locator, value):
+        select = Select(self.element_is_present(locator))
+        select.select_by_visible_text(value)
+
+    def set_date_item_from_list(self, locators, value):
+        item_list = self.elements_are_present(locators)
+        for item in item_list:
+            if item.text == value:
+                item.click()
+                break
+
     def action_double_click(self, locator):
         action = ActionChains(self.driver)
         action.double_click(locator).perform()
@@ -55,7 +67,6 @@ class BasePage:
         self.driver.switch_to.window(self.driver.window_handles[index_of_tab])
 
     def switch_to_alert(self):
-        """Switch to alert window"""
         alert = self.driver.switch_to.alert
         return alert
 

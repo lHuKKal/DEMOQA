@@ -1,11 +1,14 @@
 import base64
+import calendar
 import os
 import random
+import datetime
 
-from data.data import Person
+from data.data import Person, Date
 from faker import Faker
 
 faker_ru = Faker("ru_RU")
+faker_en = Faker("En")
 
 
 def generate_person():
@@ -88,7 +91,6 @@ def get_states_and_cities():
 
 
 def multiple_color():
-
     multiple_color_key = {
 
         "Red": "Red",
@@ -104,3 +106,54 @@ def multiple_color():
         "Aqua": "Aqua"
     }
     return multiple_color_key
+
+
+def generate_date():
+    yield Date(
+        year=faker_en.year(),
+        month=faker_en.month_name(),
+        day=faker_en.day_of_month(),
+        time="12:00"
+    )
+
+
+def random_year_between_five_years():
+    random_date = faker_en.date_time_between(start_date='-5y', end_date='+5y')
+    random_year = random_date.year
+    random_month = random_date.month
+    random_day = random_date.day
+
+    return str(random_year), str(random_month), str(random_day)
+
+
+def select_random_not_current_year_and_month():
+    current_year = datetime.datetime.now().year
+    current_month = datetime.datetime.now().month
+
+    random_month = random.randint(1, 12)
+
+    while random_month == current_month:
+        random_month = random.randint(1, 12)
+
+    # Используется только для теста где необходимо передать наименования месяца
+    # А так, можно использовать просто random_month
+    not_current_month_name = calendar.month_name[random_month]
+
+    not_current_year = current_year - random.randint(1, 5)
+
+    return not_current_month_name, str(not_current_year)
+
+
+def not_today_day():
+    today = datetime.datetime.now().day
+    current_year = datetime.datetime.now().year
+    current_month = datetime.datetime.now().month
+
+    total_days = calendar.monthrange(current_year, current_month)[1]
+    random_day = random.randint(1, total_days)
+
+    while random_day == today:
+        random_day = random.randint(1, total_days)
+
+    return str(random_day)
+
