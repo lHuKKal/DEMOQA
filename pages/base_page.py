@@ -54,10 +54,6 @@ class BasePage:
         action.context_click(locator).perform()
 
     def image_get_width_and_height(self, image_locator):
-        """
-        Взять высоту и длину картинки. Обязательно необходимо создать
-        2 переменные с width и height для возврата данных
-        """
         image = self.element_is_visible(image_locator)
         width = image.size["width"]
         height = image.size["height"]
@@ -72,6 +68,12 @@ class BasePage:
 
     def switch_to_frame_by_locator(self, locator):
         self.driver.switch_to.frame(locator)
+
+    def action_drag_and_drop_by_offset(self, locator, x_cords, y_cords):
+        action = ActionChains(self.driver)
+        action.drag_and_drop_by_offset(locator, x_cords, y_cords)
+        action.perform()
+
 
 
 

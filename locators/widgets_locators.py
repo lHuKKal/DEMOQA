@@ -1,3 +1,5 @@
+import random
+
 from selenium.webdriver.common.by import By
 
 
@@ -46,3 +48,14 @@ class DatePickerPageLocators:
     DATE_AND_TIME_TIME = (By.CSS_SELECTOR, "li[class='react-datepicker__time-list-item ']")
     DATE_AND_TIME_MONTH_LIST = (By.CSS_SELECTOR, "div[class='react-datepicker__month-option']")
     DATE_AND_TIME_YEAR_LIST = (By.CSS_SELECTOR, "div[class='react-datepicker__year-option']")
+
+
+class SliderPageLocators:
+    SLIDER_INPUT = (By.CSS_SELECTOR, "input[class='range-slider range-slider--primary']")
+    SLIDER_VALUE = (By.CSS_SELECTOR, "input[id='sliderValue']")
+
+
+class ProgressBarLocators:
+    START_BUTTON = (By.CSS_SELECTOR, "button[id='startStopButton']")
+    RESET_BUTTON = (By.CSS_SELECTOR, "button[id='resetButton']")
+    PROGRESS_BAR_VALUE = (By.CSS_SELECTOR, "div[role='progressbar']")

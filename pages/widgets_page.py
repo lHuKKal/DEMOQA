@@ -6,7 +6,8 @@ from selenium.webdriver import Keys
 
 from generator.generator import multiple_color, generate_date, random_year_between_five_years, \
     select_random_not_current_year_and_month, not_today_day, faker_en
-from locators.widgets_locators import AccordianLocators, AutoCompleteLocators, DatePickerPageLocators
+from locators.widgets_locators import AccordianLocators, AutoCompleteLocators, DatePickerPageLocators, \
+    SliderPageLocators, ProgressBarLocators
 from pages.base_page import BasePage
 
 
@@ -161,3 +162,31 @@ class DatePickerPage(BasePage):
         date_and_time_value_after = date_and_time_input.get_attribute('value')
 
         return date_and_time_value_before, date_and_time_value_after
+
+
+class SliderPage(BasePage):
+    locators = SliderPageLocators
+
+    def random_slider_value(self):
+        slider_value_before = self.element_is_visible(self.locators.SLIDER_VALUE).get_attribute('value')
+        slider_input = self.element_is_visible(self.locators.SLIDER_INPUT)
+        self.action_drag_and_drop_by_offset(slider_input, random.randint(1, 100), 0)
+        slider_value_after = self.element_is_visible(self.locators.SLIDER_VALUE).get_attribute('value')
+
+        return slider_value_before, slider_value_after
+
+
+class ProgresBarPage(BasePage):
+    locators = ProgressBarLocators
+
+    def check_progress_bar(self):
+
+        value_before = self.element_is_present(self.locators.PROGRESS_BAR_VALUE).get_attribute('aria-valuenow')
+        self.element_is_visible(self.locators.START_BUTTON).click()
+        time.sleep(11)
+        value_after = self.element_is_present(self.locators.PROGRESS_BAR_VALUE).get_attribute('aria-valuenow')
+        self.element_is_visible(self.locators.RESET_BUTTON).click()
+        time.sleep(0.1)
+        value_after_reset = self.element_is_present(self.locators.PROGRESS_BAR_VALUE).get_attribute('aria-valuenow')
+
+        return value_before, value_after, value_after_reset
