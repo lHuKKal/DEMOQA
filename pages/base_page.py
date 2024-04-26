@@ -1,3 +1,4 @@
+from selenium.common import ElementClickInterceptedException
 from selenium.webdriver.support.select import Select
 from selenium.webdriver.support.ui import WebDriverWait as wait
 from selenium.webdriver.support import expected_conditions as EC
@@ -29,6 +30,17 @@ class BasePage:
 
     def element_is_clickable(self, locator, timeout=5):
         return wait(self.driver, timeout).until(EC.element_to_be_clickable(locator))
+
+    def element_is_not_clickable(self, locator, timeout=5):
+        """
+        True - element is not clickable,
+        False - element is clickable
+        """
+        try:
+            wait(self.driver, timeout).until(EC.visibility_of_element_located(locator)).click()
+            return False
+        except ElementClickInterceptedException:
+            return True
 
     def scroll_to_element(self, locator):
         element = self.driver.find_element(*locator)  # Извлекаем элемент из кортежа

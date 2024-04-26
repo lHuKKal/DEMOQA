@@ -3,11 +3,10 @@ import time
 
 from selenium.common import TimeoutException, ElementClickInterceptedException
 from selenium.webdriver import Keys
-
 from generator.generator import multiple_color, generate_date, random_year_between_five_years, \
-    select_random_not_current_year_and_month, not_today_day, faker_en
+    select_random_not_current_year_and_month, not_today_day
 from locators.widgets_locators import AccordianLocators, AutoCompleteLocators, DatePickerPageLocators, \
-    SliderPageLocators, ProgressBarLocators
+    SliderPageLocators, ProgressBarLocators, TabsPageLocators, ToolTipsPageLocators
 from pages.base_page import BasePage
 
 
@@ -180,7 +179,6 @@ class ProgresBarPage(BasePage):
     locators = ProgressBarLocators
 
     def check_progress_bar(self):
-
         value_before = self.element_is_present(self.locators.PROGRESS_BAR_VALUE).get_attribute('aria-valuenow')
         self.element_is_visible(self.locators.START_BUTTON).click()
         time.sleep(11)
@@ -190,3 +188,36 @@ class ProgresBarPage(BasePage):
         value_after_reset = self.element_is_present(self.locators.PROGRESS_BAR_VALUE).get_attribute('aria-valuenow')
 
         return value_before, value_after, value_after_reset
+
+
+class TabsPage(BasePage):
+    locators = TabsPageLocators
+
+    def check_tabs(self, tab_name):
+        tabs = {
+            'What':
+                {'title': self.locators.WHAT_TAB,
+                 'text': self.locators.WHAT_TAB_TEXT},
+            'Origin': {'title': self.locators.ORIGIN_TAB,
+                       'text': self.locators.ORIGIN_TAB_TEXT},
+            'Use': {'title': self.locators.USE_TAB,
+                    'text': self.locators.USE_TAB_TEXT},
+            'More': {'title': self.locators.MORE_TAB}
+        }
+
+        tab_button = self.element_is_visible(tabs[tab_name]['title'])
+        # Для вкладки More, т.к. она не кликабельна и делаем Except
+        try:
+            tab_button.click()
+        except ElementClickInterceptedException:
+            return True
+        tab_text = self.element_is_visible(tabs[tab_name]['text']).text
+
+        return tab_button.text, len(tab_text)
+
+
+class ToolTipsPage(BasePage):
+    locators = ToolTipsPageLocators
+
+    def check_tool_tips(self):
+        pass

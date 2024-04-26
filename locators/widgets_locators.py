@@ -1,5 +1,3 @@
-import random
-
 from selenium.webdriver.common.by import By
 
 
@@ -59,3 +57,27 @@ class ProgressBarLocators:
     START_BUTTON = (By.CSS_SELECTOR, "button[id='startStopButton']")
     RESET_BUTTON = (By.CSS_SELECTOR, "button[id='resetButton']")
     PROGRESS_BAR_VALUE = (By.CSS_SELECTOR, "div[role='progressbar']")
+
+
+class TabsPageLocators:
+    # Tabs
+    WHAT_TAB = (By.CSS_SELECTOR, "a[id='demo-tab-what']")
+    ORIGIN_TAB = (By.CSS_SELECTOR, "a[id='demo-tab-origin']")
+    USE_TAB = (By.CSS_SELECTOR, "a[id='demo-tab-use']")
+    MORE_TAB = (By.CSS_SELECTOR, "a[id='demo-tab-more']")
+
+    # Texts
+    WHAT_TAB_TEXT = (By.CSS_SELECTOR, "div[id='demo-tabpane-what']")
+    ORIGIN_TAB_TEXT = (By.CSS_SELECTOR, "div[id='demo-tabpane-origin']")
+    USE_TAB_TEXT = (By.CSS_SELECTOR, "div[id='demo-tabpane-use']")
+
+class ToolTipsPageLocators:
+
+    # Button
+    HOVER_ME_BUTTON = (By.CSS_SELECTOR, "button[id='toolTipButton']")
+
+    # Input
+    HOVER_ME_INPUT = (By.CSS_SELECTOR, "input[id='toolTipTextField']")
+
+    #Href
+

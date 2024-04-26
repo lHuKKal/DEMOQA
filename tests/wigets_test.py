@@ -1,6 +1,7 @@
 import time
 
-from pages.widgets_page import AccordianPage, AutoCompletePage, DatePickerPage, SliderPage, ProgresBarPage
+from pages.widgets_page import AccordianPage, AutoCompletePage, DatePickerPage, SliderPage, ProgresBarPage, TabsPage, \
+    ToolTipsPage
 
 
 class TestAccordian:
@@ -65,3 +66,25 @@ class TestSlider:
 
         assert value_before != value_after, "Progress operation is not performed"
         assert value_after_reset == '0', "Progress bar has been not resset"
+
+
+class TestTabs:
+
+    def test_tabs(self, driver):
+        tabs_page = TabsPage(driver, "https://demoqa.com/tabs")
+        tabs_page.open()
+        origin_tab, origin_tab_text = tabs_page.check_tabs('Origin')
+        use_text, use_text_tab = tabs_page.check_tabs('Use')
+        what_tab, what_tab_text = tabs_page.check_tabs('What')
+        more_tab = tabs_page.check_tabs('More')
+
+        assert what_tab == 'What' and what_tab_text > 0, "'What' is not opened"
+        assert origin_tab == 'Origin' and origin_tab_text > 0, "'Origin' tab is not opened"
+        assert use_text == 'Use' and use_text_tab > 0, "'Use' tab is not opened"
+        assert more_tab is True, "'More' tab is clickable"
+
+class TestToolTips:
+
+    def test_tool_tips(self, driver):
+        tool_tips_page = ToolTipsPage(driver, "https://demoqa.com/tool-tips")
+        tool_tips_page.open()
