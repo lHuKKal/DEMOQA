@@ -65,6 +65,11 @@ class BasePage:
         action = ActionChains(self.driver)
         action.context_click(locator).perform()
 
+    def action_move_to_element(self, locator):
+        action = ActionChains(self.driver)
+        action.move_to_element(locator)
+        action.perform()
+
     def image_get_width_and_height(self, image_locator):
         image = self.element_is_visible(image_locator)
         width = image.size["width"]

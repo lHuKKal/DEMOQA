@@ -83,8 +83,15 @@ class TestTabs:
         assert use_text == 'Use' and use_text_tab > 0, "'Use' tab is not opened"
         assert more_tab is True, "'More' tab is clickable"
 
+
 class TestToolTips:
 
     def test_tool_tips(self, driver):
         tool_tips_page = ToolTipsPage(driver, "https://demoqa.com/tool-tips")
         tool_tips_page.open()
+        tool_tip_text_button, tool_tip_text_field, tool_tip_text_contrary_link, tool_tip_text_section_link = tool_tips_page.check_tool_tips()
+
+        assert tool_tip_text_button == "You hovered over the Button", "Tooltip for the button is not displayed"
+        assert tool_tip_text_field == "You hovered over the text field", "Tooltip for the field is not displayed"
+        assert tool_tip_text_contrary_link == "You hovered over the Contrary", "Tooltip for the contrary link is not displayed"
+        assert tool_tip_text_section_link == "You hovered over the 1.10.32", "Tooltip for the section link is not displayed"
