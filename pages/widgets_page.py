@@ -4,9 +4,11 @@ import time
 from selenium.common import TimeoutException, ElementClickInterceptedException
 from selenium.webdriver import Keys
 from generator.generator import multiple_color, generate_date, random_year_between_five_years, \
-    select_random_not_current_year_and_month, not_today_day
+    select_random_not_current_year_and_month, not_today_day, \
+    select_one_from_select_menu_page, select_value_from_select_menu_page, values_for_multiselect_field
 from locators.widgets_locators import AccordianLocators, AutoCompleteLocators, DatePickerPageLocators, \
-    SliderPageLocators, ProgressBarLocators, TabsPageLocators, ToolTipsPageLocators
+    SliderPageLocators, ProgressBarLocators, TabsPageLocators, ToolTipsPageLocators, MenuPageLocators, \
+    SelectMenuPageLocators
 from pages.base_page import BasePage
 
 
@@ -122,8 +124,8 @@ class DatePickerPage(BasePage):
         value_date_before = input_date.get_attribute('value')
         input_date.click()
 
-        self.set_date_by_text(self.locators.DATE_SELECT_MONTH, date.month)
-        self.set_date_by_text(self.locators.DATE_SELECT_YEAR, date.year)
+        self.select_value_by_text(self.locators.DATE_SELECT_MONTH, date.month)
+        self.select_value_by_text(self.locators.DATE_SELECT_YEAR, date.year)
         self.set_date_item_from_list(self.locators.DATE_SELECT_DAY_LIST, date.day)
 
         value_date_after = input_date.get_attribute('value')
@@ -230,11 +232,129 @@ class ToolTipsPage(BasePage):
         return text
 
     def check_tool_tips(self):
-        tool_tip_text_button = self.get_text_from_tool_tips(self.locators.HOVER_ME_BUTTON, self.locators.TOOL_TIP_BUTTON)
+        tool_tip_text_button = self.get_text_from_tool_tips(self.locators.HOVER_ME_BUTTON,
+                                                            self.locators.TOOL_TIP_BUTTON)
         tool_tip_text_field = self.get_text_from_tool_tips(self.locators.HOVER_ME_INPUT, self.locators.TOOL_TIP_INPUT)
-        tool_tip_text_contrary_link = self.get_text_from_tool_tips(self.locators.CONTRARY_LINK, self.locators.TOOL_TIP_CONTRARY_LINK)
-        tool_tip_text_section_link = self.get_text_from_tool_tips(self.locators.SECTION_LINK, self.locators.TOOL_TIP_SECTION_LINK)
+        tool_tip_text_contrary_link = self.get_text_from_tool_tips(self.locators.CONTRARY_LINK,
+                                                                   self.locators.TOOL_TIP_CONTRARY_LINK)
+        tool_tip_text_section_link = self.get_text_from_tool_tips(self.locators.SECTION_LINK,
+                                                                  self.locators.TOOL_TIP_SECTION_LINK)
 
         return tool_tip_text_button, tool_tip_text_field, tool_tip_text_contrary_link, tool_tip_text_section_link
+
+
+class MenuPage(BasePage):
+    locators = MenuPageLocators
+
+    def check_items(self):
+        item_list = self.elements_are_present(self.locators.ITEM_LIST)
+        data = []
+
+        for item in item_list:
+            self.action_move_to_element(item)
+            text = item.text
+            data.append(text)
+        return data
+
+
+class SelectMenuPage(BasePage):
+    locators = SelectMenuPageLocators
+
+    def select_values_field(self):
+        values = select_value_from_select_menu_page()
+
+        select_value_for_select_value_field = random.choice(list(values.keys()))
+        self.element_is_visible(self.locators.SELECT_VALUE_FIELD).send_keys(select_value_for_select_value_field)
+        self.element_is_visible(self.locators.SELECT_VALUE_FIELD).send_keys(Keys.ENTER)
+
+        return select_value_for_select_value_field
+
+    def select_one_field(self):
+        values = select_one_from_select_menu_page()
+
+        select_value_for_select_one_field = random.choice(list(values.keys()))
+        self.element_is_visible(self.locators.SELECT_ONE_FIELD).send_keys(select_value_for_select_one_field)
+        self.element_is_visible(self.locators.SELECT_ONE_FIELD).send_keys(Keys.ENTER)
+
+        return select_value_for_select_one_field
+
+    def select_random_value_for_old_field(self):
+        field_locator = self.locators.OLD_STYLE_SELECT_MENU_LIST
+        values = self.elements_are_present(self.locators.OLD_STYLE_SELECT_MENU_LIST)
+        values_list = []
+
+        for item in values:
+            text = item.text
+            values_list.extend(text.splitlines())
+
+        random_value = values_list[random.randint(0, 10)]
+        self.element_is_visible(field_locator).click()
+        self.select_value_by_text(field_locator, random_value)
+
+        return random_value
+
+    def select_random_value_for_standard_field(self):
+        field_locator = self.locators.STANDARD_MULTI_SECTION_LIST
+        values = self.elements_are_present(self.locators.STANDARD_MULTI_SECTION_LIST)
+        values_list = []
+
+        for item in values:
+            text = item.text
+            values_list.extend(text.splitlines())
+
+        total_index = len(values_list) - 1
+
+        random_value = values_list[random.randint(0, total_index)]
+        self.select_value_by_text(field_locator, random_value)
+
+        return random_value
+
+    def select_values_for_multiselect_field(self, count_values_for_select):
+        colors = values_for_multiselect_field()
+        count = count_values_for_select
+        selected_values = []
+
+        if count > len(colors):
+            # Максимум 4
+            raise ValueError(f"You selected counts more than available options. Should be {len(colors)} or less")
+
+        while count != 0:
+            random_color = random.choice(list(colors.keys()))
+            self.element_is_visible(self.locators.MULTI_SELECT_FIELD).send_keys(random_color)
+            self.element_is_visible(self.locators.MULTI_SELECT_FIELD).send_keys(Keys.ENTER)
+            count -= 1
+            colors.pop(random_color)
+            selected_values.append(random_color)
+            self.element_is_visible(self.locators.MULTI_SELECT_FIELD).send_keys(Keys.ESCAPE)
+
+        return selected_values
+
+    def check_result(self):
+        select_value_field_result = self.element_is_visible(self.locators.SELECT_VALUE_FIELD_RESULT).text
+        select_one_field_result = self.element_is_visible(self.locators.SELECT_ONE_FIELD_RESULT).text
+        old_style_field_result = self.element_is_visible(self.locators.OLD_STYLE_SELECT_MENU_LIST_RESULT).text
+        standard_field_result = self.element_is_visible(self.locators.STANDARD_MULTI_SECTION_LIST_RESULT).text
+
+        return select_value_field_result, select_one_field_result, old_style_field_result, standard_field_result
+
+    # Так как на сайте, кривой локатор для поля "Multiselect drop down"
+    # Приходится использовать данный костыль, для взятия данных для корректной проверки
+    def check_result_for_multi_field(self):
+        multi_select = self.elements_are_visible(self.locators.MULTI_SELECT_FIELD_RESULT)
+        multi_select_result_result = []
+
+        for item in multi_select:
+            text = item.text
+            multi_select_result_result.extend(text.splitlines())
+
+        text = [item.replace(' option', '').replace('selected.', '').replace('Nos', '') for item in multi_select_result_result]
+
+        # Удаляем первый индекс для корректного сравнения (почему-то берет не введенное значение из поля)
+        text.pop(0)
+
+        # Удаляем пустые строки и пробелы в начале и конце строк
+        text = [item.strip() for item in text if item.strip()]
+
+        return text
 
 

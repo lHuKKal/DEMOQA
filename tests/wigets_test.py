@@ -1,7 +1,7 @@
 import time
 
 from pages.widgets_page import AccordianPage, AutoCompletePage, DatePickerPage, SliderPage, ProgresBarPage, TabsPage, \
-    ToolTipsPage
+    ToolTipsPage, MenuPage, SelectMenuPage
 
 
 class TestAccordian:
@@ -95,3 +95,34 @@ class TestToolTips:
         assert tool_tip_text_field == "You hovered over the text field", "Tooltip for the field is not displayed"
         assert tool_tip_text_contrary_link == "You hovered over the Contrary", "Tooltip for the contrary link is not displayed"
         assert tool_tip_text_section_link == "You hovered over the 1.10.32", "Tooltip for the section link is not displayed"
+
+
+class TestMenu:
+
+    def test_menu(self, driver):
+        menu_page = MenuPage(driver, "https://demoqa.com/menu#")
+        menu_page.open()
+        data = menu_page.check_items()
+
+        assert data == ['Main Item 1', 'Main Item 2', 'Sub Item', 'Sub Item', 'SUB SUB LIST »', 'Sub Sub Item 1',
+                        'Sub Sub Item 2', 'Main Item 3']
+
+
+class TestSelectMenu:
+
+    def test_select_menu(self, driver):
+        select_menu_page = SelectMenuPage(driver, "https://demoqa.com/select-menu")
+        select_menu_page.open()
+        value_field = select_menu_page.select_values_field()
+        one_field = select_menu_page.select_one_field()
+        old_value = select_menu_page.select_random_value_for_old_field()
+        standard_value = select_menu_page.select_random_value_for_standard_field()
+        multiselect_field = select_menu_page.select_values_for_multiselect_field(2)
+        select_value_field_result, select_one_field_result, old_style_field_result, standard_field_result = select_menu_page.check_result()
+        multiselect_field_result = select_menu_page.check_result_for_multi_field()
+
+        assert value_field == select_value_field_result, "Incorrect value is selected or not selected at all in the 'Select Value' field"
+        assert one_field == select_one_field_result, "Incorrect value is selected or not selected at all in the 'Select One' field"
+        assert multiselect_field == multiselect_field_result, "Incorrect value is selected or not selected at all in the 'Multiselect drop down' field"
+        assert old_value in old_style_field_result, "Incorrect value is selected or not selected at all in the 'Old Style Select Menu' field"
+        assert standard_value in standard_field_result, "Incorrect value is selected or not selected at all in the 'Standard multi select' field"

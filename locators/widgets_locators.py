@@ -89,3 +89,23 @@ class ToolTipsPageLocators:
 
     # Tool tips text
     TOOL_TIP_INNER = (By.CSS_SELECTOR, "div[class='tooltip-inner']")
+
+
+class MenuPageLocators:
+    ITEM_LIST = (By.CSS_SELECTOR, "ul[id='nav'] li a")
+
+
+class SelectMenuPageLocators:
+    # Fill data fields
+    SELECT_VALUE_FIELD = (By.CSS_SELECTOR, "input[id='react-select-2-input']")
+    SELECT_ONE_FIELD = (By.CSS_SELECTOR, "input[id='react-select-3-input']")
+    MULTI_SELECT_FIELD = (By.CSS_SELECTOR, "input[id='react-select-4-input']")
+    OLD_STYLE_SELECT_MENU_LIST = (By.CSS_SELECTOR, "select[id='oldSelectMenu']")
+    STANDARD_MULTI_SECTION_LIST = (By.CSS_SELECTOR, "select[id='cars']")
+
+    # Result filled data fields
+    SELECT_VALUE_FIELD_RESULT = (By.CSS_SELECTOR, "div[id='withOptGroup']")
+    SELECT_ONE_FIELD_RESULT = (By.CSS_SELECTOR, "div[id='selectOne']")
+    MULTI_SELECT_FIELD_RESULT = (By.XPATH, "//*[text()='Multiselect drop down']//..//following-sibling::div")
+    OLD_STYLE_SELECT_MENU_LIST_RESULT = (By.CSS_SELECTOR, "select[id='oldSelectMenu']")
+    STANDARD_MULTI_SECTION_LIST_RESULT = (By.CSS_SELECTOR, "select[id='cars']")

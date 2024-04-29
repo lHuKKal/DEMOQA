@@ -46,7 +46,7 @@ class BasePage:
         element = self.driver.find_element(*locator)  # Извлекаем элемент из кортежа
         self.driver.execute_script("arguments[0].scrollIntoView(true);", element)
 
-    def set_date_by_text(self, locator, value):
+    def select_value_by_text(self, locator, value):
         select = Select(self.element_is_present(locator))
         select.select_by_visible_text(value)
 

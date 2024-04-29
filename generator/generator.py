@@ -157,3 +157,42 @@ def not_today_day():
 
     return str(random_day)
 
+
+def select_value_from_select_menu_page():
+    """Значения для поля Select Value (https://demoqa.com/select-menu)"""
+    select_values = {
+        "Group 1, option 1": "Group 1, option 1",
+        "Group 1, option 2": "Group 1, option 2",
+        "Group 2, option 1": "Group 2, option 1",
+        "Group 2, option 2": "Group 2, option 2",
+        "A root option": "A root option",
+        "Another root option": "Another root option"
+    }
+    return select_values
+
+
+def select_one_from_select_menu_page():
+    """Значения для поля Select One (https://demoqa.com/select-menu)"""
+    values = {
+        "Dr.": "dr",
+        "Mr.": "mr",
+        "Mrs.": "mrs",
+        "Ms.": "ms",
+        "Prof.": "prof",
+        "Other": "other"
+    }
+
+    return values
+
+
+def values_for_multiselect_field():
+    """Значения для поля Multiselect drop down (https://demoqa.com/select-menu)"""
+
+    values = {
+        "Red": "Red",
+        "Blue": "Blue",
+        "Green": "Green",
+        "Black": "Black"
+    }
+
+    return values
