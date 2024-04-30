@@ -43,7 +43,7 @@ class AutoCompletePage(BasePage):
         selected_values = []
 
         if count > len(all_colors):
-            raise ValueError("You selected counts more than available options. Should be 11 or less")
+            raise ValueError(f"You selected counts more than available options. Should be {len(all_colors)} or less")
 
         while count != 0:
             random_color = random.choice(list(all_colors.keys()))
