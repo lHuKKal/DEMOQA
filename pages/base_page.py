@@ -91,6 +91,11 @@ class BasePage:
         action.drag_and_drop_by_offset(locator, x_cords, y_cords)
         action.perform()
 
+    def action_drag_and_drop_to_element(self, element_move_from, element_move_to):
+        action = ActionChains(self.driver)
+        action.drag_and_drop(element_move_from, element_move_to)
+        action.perform()
+
 
 
 
