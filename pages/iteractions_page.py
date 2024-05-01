@@ -1,6 +1,6 @@
 import random
 
-from locators.iteractions_locators import SortableLocators, SelectablePageLocators
+from locators.iteractions_locators import SortableLocators, SelectablePageLocators, ResizablePageLocators
 from pages.base_page import BasePage
 
 
@@ -91,3 +91,45 @@ class SelectablePage(BasePage):
         item_list = self.elements_are_visible(element)
 
         return [item.text for item in item_list]
+
+
+class ResizablePage(BasePage):
+    locators = ResizablePageLocators
+
+    def get_px_from_width_height(self, value_of_size):
+        width = value_of_size.split(';')[0].split(':')[1].replace(' ', '')
+        height = value_of_size.split(';')[1].split(':')[1].replace(' ', '')
+
+        return width, height
+
+    def get_max_min_size(self, element):
+        size = self.element_is_visible(element)
+        size_value = size.get_attribute('style')
+
+        return size_value
+
+    def change_size_resizable_box(self):
+        box_element = self.element_is_visible(self.locators.FIRST_WINDOW_HANDLE)
+
+        self.action_drag_and_drop_by_offset(box_element, 300, 200)
+        resizable_box_max_size = self.get_px_from_width_height(self.get_max_min_size(self.locators.FIRST_WINDOW_BOX))
+
+        self.action_drag_and_drop_by_offset(box_element, -500, -300)
+        resizable_box_min_size = self.get_px_from_width_height(self.get_max_min_size(self.locators.FIRST_WINDOW_BOX))
+
+        return resizable_box_max_size, resizable_box_min_size
+
+    def change_size_resizable(self):
+        resizable_element = self.element_is_visible(self.locators.SECOND_WINDOW_HANDLE)
+        self.scroll_to_element(self.locators.SECOND_WINDOW_HANDLE)
+
+        self.action_drag_and_drop_by_offset(resizable_element,
+                                            random.randint(100, 300), random.randint(1, 300))
+        resizable_max_size = self.get_px_from_width_height(self.get_max_min_size(self.locators.SECOND_WINDOW_BOX))
+
+        self.action_drag_and_drop_by_offset(resizable_element,
+                                            random.randint(-200, -1), random.randint(-200, -1))
+        resizable_min_size = self.get_px_from_width_height(self.get_max_min_size(self.locators.SECOND_WINDOW_BOX))
+
+        return resizable_max_size, resizable_min_size
+

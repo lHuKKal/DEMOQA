@@ -1,4 +1,4 @@
-from pages.iteractions_page import SortablePage, SelectablePage
+from pages.iteractions_page import SortablePage, SelectablePage, ResizablePage
 
 
 class TestInteractions:
@@ -25,4 +25,15 @@ class TestInteractions:
             assert list_selected_values == list_tab_result, "Selected values in the 'List' tab don't match or selected incorrectly"
             assert grid_selected_values == grid_tab_result, "" "Selected values in the 'Grid' tab don't match or selected incorrectly"
 
+    class TestResizable:
+
+        def test_resizable(self, driver):
+            resizable_page = ResizablePage(driver, "https://demoqa.com/resizable")
+            resizable_page.open()
+            resizable_box_max_size, resizable_box_min_size = resizable_page.change_size_resizable_box()
+            resizable_max_size, resizable_min_size = resizable_page.change_size_resizable()
+
+            assert resizable_box_max_size == ('500px', '300px'), "Max resizable not equal '500px', '300px'"
+            assert resizable_box_min_size == ('150px', '150px'), "Min resizable not equal '500px', '300px'"
+            assert resizable_max_size != resizable_min_size, "Size is not changed for Resizable object"
 

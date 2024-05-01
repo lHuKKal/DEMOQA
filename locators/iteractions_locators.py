@@ -26,3 +26,10 @@ class SelectablePageLocators:
     LIST_TAB_SELECTED_ITEMS = (By.CSS_SELECTOR, "li[class='mt-2 list-group-item active list-group-item-action']")
     GRID_TAB_SELECTED_ITEMS = (By.CSS_SELECTOR, "li[class='list-group-item active list-group-item-action']")
 
+
+class ResizablePageLocators:
+    FIRST_WINDOW_BOX = (By.CSS_SELECTOR, "div[id='resizableBoxWithRestriction']")
+    FIRST_WINDOW_HANDLE = (By.CSS_SELECTOR, "div[class='constraint-area'] span[class='react-resizable-handle react-resizable-handle-se']")
+
+    SECOND_WINDOW_BOX = (By.CSS_SELECTOR, "div[id='resizable']")
+    SECOND_WINDOW_HANDLE = (By.CSS_SELECTOR, "div[class='resizable-nolimit mt-4'] span[class='react-resizable-handle react-resizable-handle-se']")
