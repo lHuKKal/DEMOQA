@@ -136,7 +136,7 @@ def select_random_not_current_year_and_month():
         random_month = random.randint(1, 12)
 
     # Используется только для теста где необходимо передать наименования месяца
-    # А так, можно использовать просто random_month
+    # А так, можно использовать просто random_month если нужна цифра месяца
     not_current_month_name = calendar.month_name[random_month]
 
     not_current_year = current_year - random.randint(1, 5)
@@ -149,6 +149,7 @@ def not_today_day():
     current_year = datetime.datetime.now().year
     current_month = datetime.datetime.now().month
 
+    # Общее количество дней в текущем месяце под индексом [1] - (calendar.WEDNESDAY, 31)
     total_days = calendar.monthrange(current_year, current_month)[1]
     random_day = random.randint(1, total_days)
 
