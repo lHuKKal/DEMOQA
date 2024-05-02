@@ -2,7 +2,7 @@ import random
 import time
 
 from locators.iteractions_locators import SortableLocators, SelectablePageLocators, ResizablePageLocators, \
-    DroppablePageLocators
+    DroppablePageLocators, DraggablePageLocators
 from pages.base_page import BasePage
 
 
@@ -188,19 +188,19 @@ class DroppablePage(BasePage):
 
         self.action_drag_and_drop_to_element(will_reverent, drop_box)
         time.sleep(1)
-        get_px_will_reverent_after_drop = self.get_px(self.locators.WILL_REVERENT)
+        get_px_will_reverent_after_drop = self.get_px(will_reverent)
         element_is_dropped = drop_box.text
 
         self.action_drag_and_drop_to_element(not_reverent, drop_box)
-        get_px_not_reverent = self.get_px(self.locators.NOT_REVERENT)
+        get_px_not_reverent = self.get_px(not_reverent)
         self.action_drag_and_drop_by_offset(not_reverent, -300, 0)
         time.sleep(1)
-        get_px_not_reverent_after_drop = self.get_px(self.locators.NOT_REVERENT)
+        get_px_not_reverent_after_drop = self.get_px(not_reverent)
 
         return element_is_dropped, get_px_will_reverent_after_drop, get_px_not_reverent, get_px_not_reverent_after_drop
 
     def get_px(self, element):
-        locator = self.element_is_visible(element)
+        locator = element
         attribute = locator.get_attribute('style')
         left = attribute.split(';')[1]
         top = attribute.split(';')[2]
@@ -208,4 +208,52 @@ class DroppablePage(BasePage):
         return [left, top]
 
 
+class DraggablePage(BasePage):
+    locators = DraggablePageLocators
 
+    def get_before_and_after_position(self, drag_element):
+        self.action_drag_and_drop_by_offset(drag_element, random.randint(0, 50), random.randint(0, 50))
+        before_position = self.get_px(drag_element)
+        self.action_drag_and_drop_by_offset(drag_element, random.randint(0, 50), random.randint(0, 50))
+        after_position = self.get_px(drag_element)
+
+        return before_position, after_position
+
+    def get_px(self, element):
+        locator = element
+        attribute = locator.get_attribute('style')
+        left = attribute.split(';')[1].strip()
+        top = attribute.split(';')[2].strip()
+
+        return [left, top]
+
+    def draggable_in_the_simple_tab(self):
+        self.element_is_visible(self.locators.SIMPLE_TAB).click()
+        drag_me_element = self.element_is_visible(self.locators.DRAG_ME_ELEMENT)
+
+        before_position, after_position = self.get_before_and_after_position(drag_me_element)
+
+        return before_position, after_position
+
+    def dragg_only_x_in_the_axis_restricted_tab(self):
+        self.element_is_visible(self.locators.AXIS_RESTRICTED_TAB).click()
+        drag_only_x = self.element_is_visible(self.locators.ONLY_X_ELEMENT)
+
+        before_position, after_position = self.get_before_and_after_position(drag_only_x)
+        top_x_position_before = before_position[1]
+        top_x_position_after = after_position[1]
+        left_x_position_before = before_position[0]
+        left_x_position_after = after_position[0]
+
+        return top_x_position_before, top_x_position_after, left_x_position_before, left_x_position_after
+
+    def dragg_only_y_in_the_axis_restricted_tab(self):
+        drag_only_y = self.element_is_visible(self.locators.ONLY_Y_ELEMENT)
+
+        before_position, after_position = self.get_before_and_after_position(drag_only_y)
+        top_y_position_before = before_position[1]
+        top_y_position_after = after_position[1]
+        left_y_position_before = before_position[0]
+        left_y_position_after = after_position[0]
+
+        return top_y_position_before, top_y_position_after, left_y_position_before, left_y_position_after

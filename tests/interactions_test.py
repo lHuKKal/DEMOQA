@@ -1,4 +1,4 @@
-from pages.iteractions_page import SortablePage, SelectablePage, ResizablePage, DroppablePage
+from pages.iteractions_page import SortablePage, SelectablePage, ResizablePage, DroppablePage, DraggablePage
 
 
 class TestInteractions:
@@ -61,3 +61,23 @@ class TestInteractions:
             assert element_is_dropped == 'Dropped!', "Element is not dragged in the 'Revent Draggable' tab tab"
             assert get_px_will_reverent_after_drop == [' left: 0px', ' top: 0px'], "The 'Will Reverent' element is not back to position"
             assert get_px_not_reverent == get_px_not_reverent_after_drop, "The 'Not Reverent' element is not back to position"
+
+    class TestDraggable:
+
+        def test_draggable(self, driver):
+            draggable_page = DraggablePage(driver, "https://demoqa.com/dragabble")
+            draggable_page.open()
+            before_position, after_position = draggable_page.draggable_in_the_simple_tab()
+            (top_x_position_before, top_x_position_after, left_x_position_before,
+             left_x_position_after) = draggable_page.dragg_only_x_in_the_axis_restricted_tab()
+            (top_y_position_before, top_y_position_after, left_y_position_before,
+             left_y_position_after) = draggable_page.dragg_only_y_in_the_axis_restricted_tab()
+
+            # Simple tab
+            assert before_position != after_position, "Element is not dragged"
+            # Axis Restricted tab - Only X element
+            assert top_x_position_before and top_x_position_after == "top: 0px", "The 'Only X' element is moved to the top, but should not be moved"
+            assert left_x_position_before != left_x_position_after, "The 'Only X' element is not moved to the left"
+            # Axis Restricted tab - Only X element
+            assert top_y_position_before != top_y_position_after
+            assert left_y_position_before and left_y_position_after == "left: 0px"
