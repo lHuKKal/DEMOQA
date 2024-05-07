@@ -100,7 +100,7 @@ class BasePage:
         alert = self.driver.switch_to.alert
         return alert
 
-    @allure.step("Switch to frame bt locator")
+    @allure.step("Switch to frame by locator")
     def switch_to_frame_by_locator(self, locator):
         self.driver.switch_to.frame(locator)
 

@@ -1,6 +1,7 @@
 import random
 import time
 
+import allure
 from selenium.common import TimeoutException
 
 from locators.alert_frame_windows_page_locators import BrowserWindowsLocators, AlertsLocators, FramesPageLocators, \
@@ -11,6 +12,7 @@ from pages.base_page import BasePage
 class BrowserWindowsPage(BasePage):
     locators = BrowserWindowsLocators
 
+    @allure.step("Opening the new tab")
     def new_tab_opened(self):
         """Открытие новой вкладки с помощью кнопки New Tab"""
 
@@ -26,6 +28,7 @@ class BrowserWindowsPage(BasePage):
 
         return text_title
 
+    @allure.step("Opened new window")
     def new_window_opened(self):
         self.element_is_visible(self.locators.NEW_WINDOW_BUTTON).click()
         # Переключить фокус драйвера на новую вкладку
@@ -40,6 +43,7 @@ class BrowserWindowsPage(BasePage):
 class AlertsPage(BasePage):
     locators = AlertsLocators
 
+    @allure.step("Alert is displayed after click")
     def alert_after_click(self):
         """Логика тестирование алерта после клика на кнопку"""
         self.element_is_visible(self.locators.ALERT_BUTTON).click()
@@ -48,6 +52,7 @@ class AlertsPage(BasePage):
         alert_window.accept()
         return text
 
+    @allure.step("Alert is displayed after 5 sec.")
     def alert_displayed_after_five_seconds(self):
         """Алерт отображается через 5 секунд после клика на кнопку"""
         self.element_is_visible(self.locators.ALERT_AFTER_5_SECONDS_BUTTON).click()
@@ -57,6 +62,7 @@ class AlertsPage(BasePage):
         alert.accept()
         return text
 
+    @allure.step("Confirm alert")
     def confirm_alert(self):
         """Подтверждающий аллерт"""
         self.element_is_visible(self.locators.ALERT_CONFIRM_BUTTON).click()
@@ -66,6 +72,7 @@ class AlertsPage(BasePage):
 
         return text_after_click
 
+    @allure.step("Enter value in the alert field window")
     def prompt_alert(self):
         """Алерт где необходимо ввести какой-нибудь текст"""
 
@@ -83,30 +90,40 @@ class AlertsPage(BasePage):
 class FramesPage(BasePage):
     locators = FramesPageLocators
 
+    @allure.step("Get text width and height from frame")
+    def get_text_width_height_from_frame(self, frame_element, element_get_title_text):
+        frame = self.element_is_present(frame_element)
+        width = frame.get_attribute("width")
+        height = frame.get_attribute("height")
+        self.switch_to_frame_by_locator(frame)
+        title_text = self.element_is_present(element_get_title_text).text
+        self.driver.switch_to.default_content()
+        return [title_text, width, height]
+
+    @allure.step("Check frames")
     def check_frames(self, frame_number):
 
         if frame_number == 'frame1':
-            frame = self.element_is_present(self.locators.FIRST_FRAME)
-            width = frame.get_attribute("width")
-            height = frame.get_attribute("height")
-            self.switch_to_frame_by_locator(frame)
-            text = self.element_is_present(self.locators.FRAME_TITLE).text
-            self.driver.switch_to.default_content()
-            return [text, width, height]
+            frame_one = self.locators.FIRST_FRAME
+            frame_one_text = self.locators.FRAME_TITLE
+
+            result_frame_one = self.get_text_width_height_from_frame(frame_one, frame_one_text)
+
+            return result_frame_one
 
         if frame_number == 'frame2':
-            frame = self.element_is_present(self.locators.SECOND_FRAME)
-            width = frame.get_attribute("width")
-            height = frame.get_attribute("height")
-            self.switch_to_frame_by_locator(frame)
-            text = self.element_is_present(self.locators.FRAME_TITLE).text
-            self.driver.switch_to.default_content()
-            return [text, width, height]
+            frame_two = self.locators.SECOND_FRAME
+            frame_two_text = self.locators.FRAME_TITLE
+
+            result_frame_two = self.get_text_width_height_from_frame(frame_two, frame_two_text)
+
+            return result_frame_two
 
 
 class NestedFramesPage(BasePage):
     locators = NestedFramesLocators
 
+    @allure.step("Check nested frames")
     def check_nested_frames(self):
         parent_frame = self.element_is_present(self.locators.PARENT_FRAMES)
         self.switch_to_frame_by_locator(parent_frame)
@@ -122,7 +139,8 @@ class NestedFramesPage(BasePage):
 class ModalDialogsPage(BasePage):
     locators = ModalDialogsLocators
 
-    def check_small_modal_dialog_is_opened(self):
+    @allure.step("Check the small modal window is displayed")
+    def check_small_modal_window_is_opened(self):
         self.element_is_visible(self.locators.SMALL_MODAL_BUTTON).click()
         small_window_title = self.element_is_present(self.locators.SMALL_MODAL_TITLE).text
         self.element_is_visible(self.locators.SMALL_MODAL_CLOSE).click()
@@ -130,6 +148,7 @@ class ModalDialogsPage(BasePage):
 
         return small_window_title
 
+    @allure.step("Check the large modal window is displayed")
     def check_large_modal_dialog_is_opened(self):
         self.element_is_visible(self.locators.LARGE_MODAL_BUTTON).click()
         large_modal_title = self.element_is_present(self.locators.LARGE_MODAL_BUTTON).text
@@ -138,6 +157,7 @@ class ModalDialogsPage(BasePage):
 
         return large_modal_title
 
+    @allure.step("Check the small modal window is closed")
     def check_small_modal_is_closed(self):
         try:
             self.element_is_not_visible(self.locators.SMALL_MODAL_TITLE)
@@ -145,14 +165,10 @@ class ModalDialogsPage(BasePage):
             return False
         return True
 
+    @allure.step("Check the large modal window is closed")
     def check_large_modal_is_closed(self):
         try:
             self.element_is_not_visible(self.locators.LARGE_MODAL_TITLE)
         except TimeoutException:
             return False
         return True
-
-
-
-
-
