@@ -75,9 +75,9 @@ class TestInteractions:
 
             # Simple tab
             assert before_position != after_position, "Element is not dragged"
-            # Axis Restricted tab - Only X element
+            # Axis Restricted tab - "Only X" element
             assert top_x_position_before and top_x_position_after == "top: 0px", "The 'Only X' element is moved to the top, but should not be moved"
             assert left_x_position_before != left_x_position_after, "The 'Only X' element is not moved to the left"
-            # Axis Restricted tab - Only X element
+            # Axis Restricted tab - "Only Y" element
             assert top_y_position_before != top_y_position_after
             assert left_y_position_before and left_y_position_after == "left: 0px"

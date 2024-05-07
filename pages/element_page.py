@@ -1,8 +1,8 @@
-import base64
 import os
 import random
 import time
 
+import allure
 import requests
 from faker import Faker
 from selenium.common import TimeoutException
@@ -25,6 +25,7 @@ class TextBoxPage(BasePage):
 
     """Логика тестов для страницы https://demoqa.com/text-box"""
 
+    @allure.step('Fill in all fields')
     def fill_all_fields(self):
         """Ввод данных"""
         # Провести только одну итерацию для ввода фейковых данных. Используется функция next
@@ -34,7 +35,6 @@ class TextBoxPage(BasePage):
         email = person_info.email
         current_address = person_info.current_address
         permanent_address = person_info.permanent_address
-
         self.element_is_visible(self.locators.FULL_NAME).send_keys(full_name)
         self.element_is_visible(self.locators.EMAIL).send_keys(email)
         self.element_is_visible(self.locators.CURRENT_ADDRESS).send_keys(current_address)
@@ -43,6 +43,7 @@ class TextBoxPage(BasePage):
         self.element_is_visible(self.locators.SUBMIT).click()
         return full_name, email, current_address, permanent_address
 
+    @allure.step('Checking filled form')
     def check_filled_form(self):
         """Вытаскиваем данные для дальнейшей проверки"""
 
@@ -60,10 +61,12 @@ class CheckBoxPage(BasePage):
 
     """Логика тестов для страницы https://demoqa.com/checkbox"""
 
+    @allure.step('Open full list for checking checkboxes')
     def open_full_list_checkbox(self):
         """Просто открытие всего списка папок для выбора с помощью чек боксов"""
         self.element_is_visible(self.locators.EXPAND_ALL_BUTTON).click()
 
+    @allure.step('Click on random checkbox')
     def click_random_checkbox(self):
         """Логика работы для выбора случайного чек бокса"""
         item_list = self.elements_are_visible(self.locators.ITEM_LIST)
@@ -78,15 +81,17 @@ class CheckBoxPage(BasePage):
             else:
                 break
 
+    @allure.step('Check selected checkboxes')
     def get_checked_checkboxes(self):
         checked_list = self.elements_are_present(self.locators.CHECKED_ITEMS)
         data = []
         for box in checked_list:
             title_item = box.find_element(By.XPATH, self.locators.TITLE_ITEM)
             data.append(title_item.text)
-        return str(data).replace(' ', '').replace('doc', '').replace('.', '').lower()
         # делаем замену заголовков, чтобы был корректный assert
+        return str(data).replace(' ', '').replace('doc', '').replace('.', '').lower()
 
+    @allure.step('Get output results for checking')
     def get_output_result(self):
         result_list = self.elements_are_present(self.locators.OUTPUT_RESULT)
         data = []
@@ -100,6 +105,7 @@ class RadioButtonPage(BasePage):
 
     """Логика тестов радио кнопок"""
 
+    @allure.step('Click on radio button')
     def click_radio_button(self, choice):  # добавляем переменную choice для дальнейшего выбора из словаря
         choices = {  # Создаем словарь с путями для всех радио кнопок
             'yes': self.locators.YES_RADIO_BUTTON,
@@ -108,6 +114,7 @@ class RadioButtonPage(BasePage):
         }
         self.element_is_visible(choices[choice]).click()
 
+    @allure.step('Get result radio button for checking')
     def get_result_radio_button(self):
         return self.element_is_visible(self.locators.OUTPUT_RESULT_RADIO_BUTTON).text
 
@@ -116,6 +123,7 @@ class WebTablesPage(BasePage):
     """Тест CRUD интерфейса Web Tables"""
     locators = WebTablesLocators
 
+    @allure.step('Create new record')
     def create_new_record_web_table(self, count=1):
         """Создание новой записи"""
 
@@ -133,8 +141,7 @@ class WebTablesPage(BasePage):
             salary = generation_data.salary
             departament = generation_data.departament
 
-            """Создание новой записи в интерфейсе Web Tables"""
-
+            # Создание новой записи в интерфейсе Web Tables
             self.element_is_visible(self.locators.ADD_BUTTON).click()
             self.element_is_visible(self.locators.FIRST_NAME).send_keys(first_name)
             self.element_is_visible(self.locators.LAST_NAME).send_keys(last_name)
@@ -148,6 +155,7 @@ class WebTablesPage(BasePage):
             count -= 1
         return results
 
+    @allure.step('Get created result for checking')
     def check_created_record_in_the_web_tables(self):
         """Берем ВСЕ данные из таблицы для дальнейшей проверки"""
 
@@ -160,12 +168,14 @@ class WebTablesPage(BasePage):
             data.append(item.text.splitlines())
         return data
 
+    @allure.step('Search record via Search field')
     def search_record_in_web_table(self, key_word):
         """Поиск созданной записи с помощью поля поиска"""
 
         # Поиск осуществляется с помощью передачи слова в переменную key_word
         self.element_is_visible(self.locators.SEARCH_INPUT).send_keys(key_word)
 
+    @allure.step('Get all record for checking')
     def check_searched_record(self):
         """Забираем данные из таблицы для дальнейшей проверке"""
 
@@ -175,6 +185,7 @@ class WebTablesPage(BasePage):
 
         return row.text.splitlines()
 
+    @allure.step('Edit created record')
     def edit_created_record(self):
         """Логика редактирование записи"""
 
@@ -217,11 +228,13 @@ class WebTablesPage(BasePage):
 
         return first_name, last_name, str(age), email, str(salary), departament
 
+    @allure.step('Click on Delete button')
     def delete_record_new_table(self):
         """Клик на кнопку удалить"""
 
         self.element_is_visible(self.locators.DELETE_BUTTON).click()
 
+    @allure.step('Check that the record has been deleted')
     def check_delete_record(self):
         """Вытаскиваем текст "No rows found", когда запись удалена для дальнейшей проверки"""
 
@@ -229,6 +242,7 @@ class WebTablesPage(BasePage):
         # возвращаем данный текст в функцию для дальнейшей проверки для теста удаления
         return self.element_is_present(self.locators.NO_ROWS).text
 
+    @allure.step('Clear search field')
     def clear_search_field_web_table(self):
         """Очистка поля поиска"""
 
@@ -237,6 +251,7 @@ class WebTablesPage(BasePage):
         self.element_is_visible(self.locators.SEARCH_INPUT).send_keys(Keys.CONTROL + "a")
         self.element_is_visible(self.locators.SEARCH_INPUT).send_keys(Keys.DELETE)
 
+    @allure.step('Change count rows')
     def change_count_some_rows(self):
         """Смена количество строк в таблице"""
 
@@ -251,11 +266,13 @@ class WebTablesPage(BasePage):
             data.append(self.check_count_rows())
         return data
 
+    @allure.step('Check that the count of rows has benn changed')
     def check_count_rows(self):
 
         list_rows = self.elements_are_present(self.locators.FULL_RECORD_LIST)
         return len(list_rows)
 
+    @allure.step('Change the lines to 5 and get result')
     def five_change_rows(self):
 
         self.scroll_to_element(self.locators.COUNT_ROW_LIST_BUTTON)
@@ -264,6 +281,7 @@ class WebTablesPage(BasePage):
         five_row = self.elements_are_present(self.locators.FULL_RECORD_LIST)
         return len(five_row)
 
+    @allure.step('Change the rows and get result')
     def own_change_count_some_rows(self):
         """Смена количество строк в таблице"""
 
@@ -285,21 +303,25 @@ class ButtonsPage(BasePage):
     """Тестирование кликов в интерфейсе Buttons (https://demoqa.com/buttons)"""
     locators = ButtonsPageLocators
 
+    @allure.step('Double click on button')
     def double_click_button(self):
         """Тест двойного клика"""
 
         self.action_double_click(self.element_is_visible(self.locators.DOUBLE_CLICK_BUTTON))
 
+    @allure.step('Right click on button')
     def right_click_button(self):
         """Тест клика провой кнопки мыши"""
 
         self.action_right_click(self.element_is_visible(self.locators.RIGHT_CLICK_BUTTON))
 
+    @allure.step('Left click on button')
     def left_click_button(self):
         """Тест клика у динамической кнопки"""
 
         self.element_is_visible(self.locators.DYNAMIC_CLICK_BUTTON).click()
 
+    @allure.step('Get result that buttons has been clicked')
     def check_clicks_button(self):
         """Оутпуты, что кнопки были кликнуты для проверки"""
 
@@ -313,6 +335,7 @@ class ButtonsPage(BasePage):
 class LinksPage(BasePage):
     locators = LinksPageLocators
 
+    @allure.step('Check new tab simple link')
     def check_new_tab_simple_link(self):
 
         simple_link = self.element_is_visible(self.locators.SAMPLE_LINK)
@@ -327,6 +350,7 @@ class LinksPage(BasePage):
         else:
             return link_href, request.status_code
 
+    @allure.step('Check that link has been broken')
     def check_broken_link(self, url):
 
         request = requests.get(url)
@@ -341,11 +365,13 @@ class BrokenPage(BasePage):
     """Тестирование картинок в интерфейсе Images (https://demoqa.com/broken)"""
     locators = ImageLocators
 
+    @allure.step('Check valid image')
     def valid_image(self):
         """Тестирование валидной картинки"""
         width, height = self.image_get_width_and_height(self.locators.VALID_IMAGE)
         return width, height
 
+    @allure.step('Check that image is broken')
     def broken_image(self):
         """Тестирование поломанной картинки"""
         image = self.element_is_visible(self.locators.BROKEN_IMAGE)
@@ -359,6 +385,7 @@ class UploadDownloadPage(BasePage):
     """Тестирование скачивание и загрузки файла"""
     locators = UploadDownloadPageLocators
 
+    @allure.step('Upload file')
     def upload_file(self):
         # Генерируем случайный файл
         file_name, path = generate_file()
@@ -367,12 +394,14 @@ class UploadDownloadPage(BasePage):
         uploaded_file_name = self.element_is_present(self.locators.UPLOADED_FILE_NAME).text
         return file_name.split('\\')[-1], path, uploaded_file_name.split('\\')[-1]
 
+    @allure.step('Download file')
     def download_file(self):
 
         link = self.element_is_visible(self.locators.DOWNLOAD_BUTTON).get_attribute('href')
         check = generate_jpeg(link)
         return check
 
+    @allure.step('Check the file has been downloaded and get name of file')
     def check_file_is_download(self, file_name):
         """Тестирование скачивания файла и проверки по его имени (если мы знаем имя файла)"""
         self.element_is_visible(self.locators.DOWNLOAD_BUTTON).click()
@@ -390,26 +419,30 @@ class UploadDownloadPage(BasePage):
             return "File is not downloaded"
 
     @staticmethod
-    def get_current_downloads():
+    @allure.step('Get list of files in the Downloads folder of OS')
+    def get_current_files_in_downloads_folder():
         """Возвращает список текущих файлов в папке загрузок."""
         # Универсальный путь для все ОС к папке Downloads
         downloads_dir = os.path.join(os.path.expanduser('~'), 'Downloads')
         return os.listdir(downloads_dir)
 
-    def get_new_download(self):
+    @allure.step('Download file and check by the file in the Downloads folder of OS')
+    def get_new_download_file(self):
         """Возвращает новый файл, который не был в списке предыдущих файлов."""
+
         # Берем список текущих файлов в папке "Download"
-        current_files_before = self.get_current_downloads()
+        current_files_before_download = self.get_current_files_in_downloads_folder()
         # Cкачиваем файл
         self.element_is_visible(self.locators.DOWNLOAD_BUTTON).click()
         time.sleep(5)
         # Берем список файлов после загрузки файла
-        current_files_after = self.get_current_downloads()
+        current_files_after_download = self.get_current_files_in_downloads_folder()
         # Находим загруженный файл, если он есть, то вернем его, если нет возвращается значение как None
-        new_files = list(set(current_files_after) - set(current_files_before))
-        return new_files[0] if new_files else None
+        new_file = list(set(current_files_after_download) - set(current_files_before_download))
+        return new_file[0] if new_file else None
 
     @staticmethod
+    @allure.step('Download the field and check file by name')
     def check_download_dynamic_name(file_name):
         """Проверяет, является ли файл действительным загруженным файлом."""
         downloads_dir = os.path.expanduser('~') + '\\Downloads'
@@ -428,6 +461,7 @@ class UploadDownloadPage(BasePage):
 class DynamicPropertiesPage(BasePage):
     locators = DynamicPropertiesLocators
 
+    @allure.step('Check the color of button after 5 sec')
     def check_changed_color_of_button(self):
 
         color_button = self.element_is_present(self.locators.COLOR_CHANGE_BUTTON)
@@ -437,6 +471,7 @@ class DynamicPropertiesPage(BasePage):
 
         return color_before_button, color_after_five_seconds
 
+    @allure.step('Check that the button is displayed after 5 sec')
     def check_button_is_displayed_after_five_seconds(self):
 
         try:
@@ -445,6 +480,7 @@ class DynamicPropertiesPage(BasePage):
             return False
         return True
 
+    @allure.step('Check that the button is clickable')
     def check_button_is_enabled(self):
         # Обработка исключений
         try:
@@ -452,5 +488,3 @@ class DynamicPropertiesPage(BasePage):
         except TimeoutException:
             return False
         return True
-
-

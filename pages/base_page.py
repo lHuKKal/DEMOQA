@@ -1,3 +1,4 @@
+import allure
 from selenium.common import ElementClickInterceptedException
 from selenium.webdriver.support.select import Select
 from selenium.webdriver.support.ui import WebDriverWait as wait
@@ -13,6 +14,7 @@ class BasePage:
     def open(self):
         self.driver.get(self.url)
 
+    @allure.step('Element is visible')
     def element_is_visible(self, locator, timeout=10):
         return wait(self.driver, timeout).until(EC.visibility_of_element_located(locator))
 
@@ -99,8 +101,3 @@ class BasePage:
         action = ActionChains(self.driver)
         action.drag_and_drop(element_move_from, element_move_to)
         action.perform()
-
-
-
-
-
