@@ -1,11 +1,15 @@
 import time
 
+import allure
+
 from pages.forms_page import FillPracticeForm
 
 
+@allure.suite("Testing the 'Practice Form' interface")
 class TestPracticeSection:
+    @allure.feature("Testing fill data forms")
     class TestPracticeForm:
-
+        @allure.title("Testing fill data forms and check result in the 'Practice Form' interface")
         def test_practice_data_form(self, driver):
             practice_form_page = FillPracticeForm(driver, "https://demoqa.com/automation-practice-form")
             practice_form_page.open()
@@ -28,10 +32,3 @@ class TestPracticeSection:
             assert hobbies_check_boxes == student_hobbies, "Hobbies don't matched or record has been created incorrectly"
             assert subjects == student_subjects, "Subjects don't matched or record has been created incorrectly"
             assert state_and_city == student_state_and_city, "State and City don't matched or record has been created incorrectly"
-
-
-
-
-
-
-

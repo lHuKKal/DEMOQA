@@ -2,6 +2,7 @@ import os
 import random
 import time
 
+import allure
 from selenium.webdriver import Keys
 
 from generator.generator import generate_person, generate_jpeg, generate_file, subject_keys, get_states_and_cities
@@ -12,6 +13,7 @@ from pages.base_page import BasePage
 class FillPracticeForm(BasePage):
     locators = PracticeFormLocators
 
+    @allure.step("Fill the data fields")
     def fill_the_data_fields_of_practice_form(self):
         """Заполнние обычных полей"""
 
@@ -35,6 +37,7 @@ class FillPracticeForm(BasePage):
 
         return first_name, last_name, email, mobile, current_address, name
 
+    @allure.step("Select subjects")
     def select_subject(self, select_the_count_of_subjects):
         """Выбор случайного предмета с помощью ключей. Общее количество ключей 14"""
 
@@ -58,6 +61,7 @@ class FillPracticeForm(BasePage):
         result_string = ', '.join(values)
         return result_string
 
+    @allure.step("Select a random radio button")
     def select_radio_button_in_the_practice_form_own(self):
         """Выбор случайного радио кнопки с помощью словаря"""
         values_of_radio_button = {
@@ -71,6 +75,7 @@ class FillPracticeForm(BasePage):
 
         return random_value
 
+    @allure.step("Select a random gender")
     def select_random_gender(self):
         """Выбор случайного пола"""
 
@@ -80,27 +85,14 @@ class FillPracticeForm(BasePage):
 
         return result
 
-    def select_date_in_practice_form(self):
-        self.element_is_visible(self.locators.DATE_OF_BRITH).click()
-
-        pass
-
+    @allure.step("Upload picture")
     def upload_picture(self):
         file_name, path = generate_file()
         self.element_is_present(self.locators.UPLOAD_PICTURE).send_keys(path)
         os.remove(path)
         return file_name.split('\\')[-1], path
 
-    def select_random_check_box(self):
-        """Случайный выбор чекбокса (Не подходит для тестов)"""
-        list_check_boxes = self.elements_are_visible(self.locators.RANDOM_CHECK_BOX)
-        count = 3
-
-        while count != 0:
-            check_box = list_check_boxes[random.randint(0, 2)]
-            check_box.click()
-            count -= 1
-
+    @allure.step("Select random checkbox")
     def random_solo_check_box(self, count_check_boxes):
         """Выбор случайного чебокса, общее количество 3"""
         check_box_values = {
@@ -112,7 +104,7 @@ class FillPracticeForm(BasePage):
         count = count_check_boxes
         # Проверка, что введенное количество меньше чем общее количество ключей
         if count_check_boxes > len(check_box_values):
-            raise ValueError("You selected check box counts more than available options. Should be 3 or less")
+            raise ValueError(f"You selected check box counts more than available options. Should be {len(check_box_values)} or less")
         values = []
 
         while count != 0:
@@ -127,6 +119,7 @@ class FillPracticeForm(BasePage):
         string_result = ', '.join(values)
         return string_result
 
+    @allure.step("Select random state and city")
     def select_random_state_city_and_submit_own(self):
         """Выбор случайного штата и случайного города"""
 
@@ -158,6 +151,7 @@ class FillPracticeForm(BasePage):
 
         return state_and_city
 
+    @allure.step("Check result after creating student")
     def check_result_data_form(self):
         """Поля после создание студента для проверки"""
 
