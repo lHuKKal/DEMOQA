@@ -2,7 +2,6 @@ import random
 import time
 from collections.abc import Mapping
 
-
 import allure
 import pytest
 from pages.base_page import BasePage
@@ -242,6 +241,7 @@ class TestElements:
     @allure.feature('Testing Dynamic Properties interface')
     class TestDynamicProperties:
         """Тестирование данимаических кнопок в интерфейсе Dynamic Properties"""
+
         @allure.title('Testing - color has been changing after 5 sec. ')
         def test_dynamic_properties_buttons(self, driver):
             """Тестирование смена цвета после 5 секунд"""

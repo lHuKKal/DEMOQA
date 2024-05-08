@@ -1,5 +1,3 @@
-import time
-
 import allure
 
 from pages.alert_frame_windows_page import BrowserWindowsPage, AlertsPage, FramesPage, NestedFramesPage, \

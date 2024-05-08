@@ -36,6 +36,7 @@ class BrowserWindowsPage(BasePage):
         time.sleep(1)
         text_title = self.element_is_present(self.locators.NEW_TAB_TITLE).text
         self.driver.close()
+        self.switch_to_tab(0)
 
         return text_title
 
