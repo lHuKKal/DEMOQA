@@ -1,5 +1,7 @@
 import time
 
+import allure
+
 from pages.widgets_page import AccordianPage, AutoCompletePage, DatePickerPage, SliderPage, ProgresBarPage, TabsPage, \
     ToolTipsPage, MenuPage, SelectMenuPage
 

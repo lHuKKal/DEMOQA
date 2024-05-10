@@ -1,9 +1,13 @@
-from pages.iteractions_page import SortablePage, SelectablePage, ResizablePage, DroppablePage, DraggablePage
+import allure
+
+from pages.interactions_page import SortablePage, SelectablePage, ResizablePage, DroppablePage, DraggablePage
 
 
+@allure.suite("Interactions section")
 class TestInteractions:
+    @allure.feature("Testing - Sort function in the Sortable interface")
     class TestSortable:
-
+        @allure.title("Testing sortable function")
         def test_sortable(self, driver):
             sortable_page = SortablePage(driver, "https://demoqa.com/sortable")
             sortable_page.open()
@@ -13,8 +17,9 @@ class TestInteractions:
             assert list_order_before != list_order_after, "The List tab is not sorted"
             assert grid_order_before != grid_order_after, "The Grid tab is not sorted"
 
+    @allure.feature("Testing - Select function in the Selectable interface")
     class TestSelectable:
-
+        @allure.title("Testing the select function")
         def test_selectable(self, driver):
             selectable_page = SelectablePage(driver, "https://demoqa.com/selectable")
             selectable_page.open()
@@ -24,8 +29,9 @@ class TestInteractions:
             assert list_selected_values == list_tab_result, "Selected values in the 'List' tab don't match or selected incorrectly"
             assert grid_selected_values == grid_tab_result, "" "Selected values in the 'Grid' tab don't match or selected incorrectly"
 
+    @allure.feature("Testing - change size of box in the Resizable interface")
     class TestResizable:
-
+        @allure.title("Testing change size of box")
         def test_resizable(self, driver):
             resizable_page = ResizablePage(driver, "https://demoqa.com/resizable")
             resizable_page.open()
@@ -36,8 +42,9 @@ class TestInteractions:
             assert resizable_box_min_size == ('150px', '150px'), "Min resizable not equal '500px', '300px'"
             assert resizable_max_size != resizable_min_size, "Size is not changed for Resizable object"
 
+    @allure.feature("Testing - Drag and Drop function in the Droppable interface")
     class TestDroppable:
-
+        @allure.title("Testing the Drag and Drop function in the Accept, Simple, Prevent and Revert tabs")
         def test_droppable(self, driver):
             droppable_page = DroppablePage(driver, "https://demoqa.com/droppable")
             droppable_page.open()
@@ -54,16 +61,21 @@ class TestInteractions:
             assert after_not_acceptable_drop == 'Drop here', "Not accepted element is accepted in the Accept tab"
             assert after_acceptable_drop == 'Dropped!', "Accepted element is not accepted in the Accept tab"
             # Prevent Propagation tab
-            assert after_drag_to_not_greedy_box == ['Dropped!', 'Dropped!'], "Element is not dragged in the 'not greedy inner box' of Prevent Propagation tab"
-            assert after_drag_to_greedy_box == ['Outer droppable', 'Dropped!'], "Element is not dragged in the 'greedy inner box' of Prevent Propagation tab"
-            assert after_drag_to_up_greedy_box == ['Dropped!', 'Dropped!'], "Element is not dragged up in the 'greedy box' of Prevent Propagation tab"
+            assert after_drag_to_not_greedy_box == ['Dropped!',
+                                                    'Dropped!'], "Element is not dragged in the 'not greedy inner box' of Prevent Propagation tab"
+            assert after_drag_to_greedy_box == ['Outer droppable',
+                                                'Dropped!'], "Element is not dragged in the 'greedy inner box' of Prevent Propagation tab"
+            assert after_drag_to_up_greedy_box == ['Dropped!',
+                                                   'Dropped!'], "Element is not dragged up in the 'greedy box' of Prevent Propagation tab"
             # Revert Draggable tab
             assert element_is_dropped == 'Dropped!', "Element is not dragged in the 'Revent Draggable' tab tab"
-            assert get_px_will_reverent_after_drop == [' left: 0px', ' top: 0px'], "The 'Will Reverent' element is not back to position"
+            assert get_px_will_reverent_after_drop == [' left: 0px',
+                                                       ' top: 0px'], "The 'Will Reverent' element is not back to position"
             assert get_px_not_reverent == get_px_not_reverent_after_drop, "The 'Not Reverent' element is not back to position"
 
+    @allure.feature("Testing - Drag function in the Dragabble interface")
     class TestDraggable:
-
+        @allure.title("Testing the Drag function in the Simple and Axis Restricted tabs")
         def test_draggable(self, driver):
             draggable_page = DraggablePage(driver, "https://demoqa.com/dragabble")
             draggable_page.open()
