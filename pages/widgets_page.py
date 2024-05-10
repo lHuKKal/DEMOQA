@@ -1,6 +1,7 @@
 import random
 import time
 
+import allure
 from selenium.common import TimeoutException, ElementClickInterceptedException
 from selenium.webdriver import Keys
 from generator.generator import multiple_color, generate_date, random_year_between_five_years, \
@@ -15,6 +16,7 @@ from pages.base_page import BasePage
 class AccordianPage(BasePage):
     locators = AccordianLocators
 
+    @allure.title("get text from tabs")
     def accordian_page(self):
         first_section = self.element_is_visible(self.locators.FIRST_SECTION)
         second_section = self.element_is_visible(self.locators.SECOND_SECTION)
@@ -37,6 +39,7 @@ class AccordianPage(BasePage):
 class AutoCompletePage(BasePage):
     locators = AutoCompleteLocators
 
+    @allure.title("Select several colors for Multi field")
     def select_several_color_for_multi_field(self, count_colors_for_select):
         all_colors = multiple_color()
         count = count_colors_for_select
@@ -56,6 +59,7 @@ class AutoCompletePage(BasePage):
         result_for_check = ', '.join(selected_values)
         return result_for_check
 
+    @allure.title("Select random color")
     def select_single_color(self):
 
         all_colors = multiple_color()
@@ -66,6 +70,7 @@ class AutoCompletePage(BasePage):
         self.element_is_visible(self.locators.SINGLE_TYPE_FIELD).send_keys(Keys.ENTER)
         return random_color
 
+    @allure.title("Get result of several selected colors")
     def check_selected_several_colors(self):
 
         multiple_colors = self.elements_are_visible(self.locators.MULTIPLE_TYPE_RESULT)
@@ -77,11 +82,13 @@ class AutoCompletePage(BasePage):
         result_for_check = ', '.join(result)
         return result_for_check
 
+    @allure.title("Get result selected only one color")
     def check_selected_one_color(self):
 
         selected_single_color = self.element_is_present(self.locators.SINGE_TYPE_RESULT).text
         return selected_single_color
 
+    @allure.title("Get result that Multi field is cleared by singe button")
     def check_remove_value_from_multi_field(self, number_of_colours_to_remove):
         selected_values = self.elements_are_visible(self.locators.MULTIPLE_TYPE_RESULT)
         count = number_of_colours_to_remove
@@ -104,6 +111,7 @@ class AutoCompletePage(BasePage):
 
         return after_clear_result_for_check, cleared_values_for_check
 
+    @allure.title("Check that all value are cleared by Clear button in the Multi field")
     def check_cleared_field(self):
 
         self.element_is_visible(self.locators.MULTIPLE_TYPE_CLEAR_ALL_VALUE_BUTTON).click()
@@ -117,6 +125,7 @@ class AutoCompletePage(BasePage):
 class DatePickerPage(BasePage):
     locators = DatePickerPageLocators
 
+    @allure.title("Select date")
     def select_date(self):
         date = next(generate_date())
 
@@ -132,6 +141,7 @@ class DatePickerPage(BasePage):
 
         return value_date_before, value_date_after
 
+    @allure.title("Select date by text")
     def select_date_by_text(self):
         random_year, random_month, random_day = random_year_between_five_years()
         date_before = self.element_is_visible(self.locators.DATE_INPUT).get_attribute('value')
@@ -146,6 +156,7 @@ class DatePickerPage(BasePage):
 
         return date_before, date_after
 
+    @allure.title("Select date and time")
     def select_date_and_time(self):
         month_name, year = select_random_not_current_year_and_month()
         day = not_today_day()
@@ -168,6 +179,7 @@ class DatePickerPage(BasePage):
 class SliderPage(BasePage):
     locators = SliderPageLocators
 
+    @allure.title("Select random slider value")
     def random_slider_value(self):
         slider_value_before = self.element_is_visible(self.locators.SLIDER_VALUE).get_attribute('value')
         slider_input = self.element_is_visible(self.locators.SLIDER_INPUT)
@@ -180,6 +192,7 @@ class SliderPage(BasePage):
 class ProgresBarPage(BasePage):
     locators = ProgressBarLocators
 
+    @allure.title("Check progress bar")
     def check_progress_bar(self):
         value_before = self.element_is_present(self.locators.PROGRESS_BAR_VALUE).get_attribute('aria-valuenow')
         self.element_is_visible(self.locators.START_BUTTON).click()
@@ -195,6 +208,7 @@ class ProgresBarPage(BasePage):
 class TabsPage(BasePage):
     locators = TabsPageLocators
 
+    @allure.title("Check tabs")
     def check_tabs(self, tab_name):
         tabs = {
             'What':
@@ -221,6 +235,7 @@ class TabsPage(BasePage):
 class ToolTipsPage(BasePage):
     locators = ToolTipsPageLocators
 
+    @allure.title("Get text from tool tips")
     def get_text_from_tool_tips(self, hover_element, wait_element):
         element = self.element_is_present(hover_element)
         self.action_move_to_element(element)
@@ -231,6 +246,7 @@ class ToolTipsPage(BasePage):
 
         return text
 
+    @allure.title("Check tool tips")
     def check_tool_tips(self):
         tool_tip_text_button = self.get_text_from_tool_tips(self.locators.HOVER_ME_BUTTON,
                                                             self.locators.TOOL_TIP_BUTTON)
@@ -246,6 +262,7 @@ class ToolTipsPage(BasePage):
 class MenuPage(BasePage):
     locators = MenuPageLocators
 
+    @allure.title("Check items")
     def check_items(self):
         item_list = self.elements_are_present(self.locators.ITEM_LIST)
         data = []
@@ -260,6 +277,7 @@ class MenuPage(BasePage):
 class SelectMenuPage(BasePage):
     locators = SelectMenuPageLocators
 
+    @allure.title("Select random value")
     def select_values_field(self):
         values = select_value_from_select_menu_page()
 
@@ -269,6 +287,7 @@ class SelectMenuPage(BasePage):
 
         return select_value_for_select_value_field
 
+    @allure.title("Select value for One field")
     def select_one_field(self):
         values = select_one_from_select_menu_page()
 
@@ -278,6 +297,7 @@ class SelectMenuPage(BasePage):
 
         return select_value_for_select_one_field
 
+    @allure.title("Select random value for Old field")
     def select_random_value_for_old_field(self):
         field_locator = self.locators.OLD_STYLE_SELECT_MENU_LIST
         values = self.elements_are_present(self.locators.OLD_STYLE_SELECT_MENU_LIST)
@@ -293,6 +313,7 @@ class SelectMenuPage(BasePage):
 
         return random_value
 
+    @allure.title("Select random value for Standard field")
     def select_random_value_for_standard_field(self):
         field_locator = self.locators.STANDARD_MULTI_SECTION_LIST
         values = self.elements_are_present(self.locators.STANDARD_MULTI_SECTION_LIST)
@@ -309,6 +330,7 @@ class SelectMenuPage(BasePage):
 
         return random_value
 
+    @allure.title("Select random values for Multi Select field")
     def select_values_for_multiselect_field(self, count_values_for_select):
         colors = values_for_multiselect_field()
         count = count_values_for_select
@@ -329,6 +351,7 @@ class SelectMenuPage(BasePage):
 
         return selected_values
 
+    @allure.title("Get all fields result")
     def check_result(self):
         select_value_field_result = self.element_is_visible(self.locators.SELECT_VALUE_FIELD_RESULT).text
         select_one_field_result = self.element_is_visible(self.locators.SELECT_ONE_FIELD_RESULT).text
@@ -339,6 +362,7 @@ class SelectMenuPage(BasePage):
 
     # Так как на сайте, кривой локатор для поля "Multiselect drop down"
     # Приходится использовать данный костыль, для взятия данных для корректной проверки
+    @allure.step("Get result from Multi field")
     def check_result_for_multi_field(self):
         multi_select = self.elements_are_visible(self.locators.MULTI_SELECT_FIELD_RESULT)
         multi_select_result_result = []
@@ -347,7 +371,8 @@ class SelectMenuPage(BasePage):
             text = item.text
             multi_select_result_result.extend(text.splitlines())
 
-        text = [item.replace(' option', '').replace('selected.', '').replace('Nos', '') for item in multi_select_result_result]
+        text = [item.replace(' option', '').replace('selected.', '').replace('Nos', '') for item in
+                multi_select_result_result]
 
         # Удаляем первый индекс для корректного сравнения (почему-то берет не введенное значение из поля)
         text.pop(0)
@@ -356,5 +381,3 @@ class SelectMenuPage(BasePage):
         text = [item.strip() for item in text if item.strip()]
 
         return text
-
-
