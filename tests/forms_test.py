@@ -5,7 +5,7 @@ import allure
 from pages.forms_page import FillPracticeForm
 
 
-@allure.suite("Testing the 'Practice Form' interface")
+@allure.suite("Testing the 'Form' section")
 class TestPracticeSection:
     @allure.feature("Testing fill data forms")
     class TestPracticeForm:

@@ -365,14 +365,14 @@ class SelectMenuPage(BasePage):
     @allure.step("Get result from Multi field")
     def check_result_for_multi_field(self):
         multi_select = self.elements_are_visible(self.locators.MULTI_SELECT_FIELD_RESULT)
-        multi_select_result_result = []
+        multi_select_result = []
 
         for item in multi_select:
             text = item.text
-            multi_select_result_result.extend(text.splitlines())
+            multi_select_result.extend(text.splitlines())
 
         text = [item.replace(' option', '').replace('selected.', '').replace('Nos', '') for item in
-                multi_select_result_result]
+                multi_select_result]
 
         # Удаляем первый индекс для корректного сравнения (почему-то берет не введенное значение из поля)
         text.pop(0)
